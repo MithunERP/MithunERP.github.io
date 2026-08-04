@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import QuickConnect from "@/components/QuickConnect";
 import ThemeScript from "./theme-script";
 import "./globals.css";
 
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <QuickConnect />
       </body>
     </html>
   );

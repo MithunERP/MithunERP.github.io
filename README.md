@@ -16,7 +16,7 @@ npm run dev       # http://localhost:3000
 ```
 
 Copy `.env.example` to `.env.local` and point `NEXT_PUBLIC_API_URL` at a running backend
-(see the `MithunERP-backend` repo) if you want the contact form to work locally.
+(see the `shade` repo) if you want the contact form to work locally.
 
 ## Build
 
@@ -42,4 +42,4 @@ legacy-static/  Reference copy of the original plain-HTML site (not built or dep
 ---
 
 Internal project documentation (architecture, ADRs, API reference, roadmap, etc.) lives in the
-private `MithunERP-backend` repo and is intentionally not part of this public repo.
+private `shade` repo and is intentionally not part of this public repo.
