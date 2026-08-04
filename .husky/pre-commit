@@ -1,0 +1,9 @@
+staged=$(git diff --cached --name-only)
+blocked=$(echo "$staged" | grep -E '(^|/)(CLAUDE\.md|docs/|\.claude/|idea)' || true)
+
+if [ -n "$blocked" ]; then
+  echo "Blocked: confidential files staged for commit:"
+  echo "$blocked"
+  echo "These must never be pushed — see MithunERP-backend/docs/hooks-readme.md."
+  exit 1
+fi

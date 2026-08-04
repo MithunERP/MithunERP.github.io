@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MithunERP — Gothic / Vampire theme tokens
+   Dark = default aesthetic (void black + blood red).
+   Light = parchment/manuscript inversion, same red accent.
+   Actual mode is chosen client-side (system preference on first
+   visit, then remembered) — see components/ThemeScript.tsx.
+   ============================================================ */
+
+:root,
+:root[data-theme="dark"] {
+  --background: #0a0505;
+  --panel: #150a0c;
+  --panel-border: #2a1216;
+  --foreground: #f2e9e4;
+  --muted: #b8a397;
+  --accent: #b91c2c;
+  --accent-strong: #7a0c17;
+  --accent-glow: #e63950;
+}
+
+:root[data-theme="light"] {
+  --background: #f2e9e4;
+  --panel: #e6d8cf;
+  --panel-border: #d2bcae;
+  --foreground: #1a0508;
+  --muted: #5c4640;
+  --accent: #8b0f1f;
+  --accent-strong: #5c0a15;
+  --accent-glow: #b91c2c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-panel: var(--panel);
+  --color-panel-border: var(--panel-border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-glow: var(--accent-glow);
+  --font-display: var(--font-cinzel);
+  --font-sans: var(--font-body);
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: var(--accent-strong);
+  color: var(--foreground);
+}
+
+/* Theme-swapped logo: both images render, CSS picks the one matching
+   data-theme so there's no flash/JS needed (same mechanism as the color
+   tokens above). */
+.brand-mark {
+  display: none;
+}
+
+:root[data-theme="dark"] .brand-mark[data-theme-variant="dark"] {
+  display: block;
+}
+
+:root[data-theme="light"] .brand-mark[data-theme-variant="light"] {
+  display: block;
+}
