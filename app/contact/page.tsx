@@ -22,14 +22,12 @@ export default function ContactPage() {
       <Reveal delay={1} className="mt-12 grid gap-12 md:grid-cols-[1fr_1.4fr]">
         <div className="space-y-6 text-sm text-muted">
           <div>
-            <p className="text-xs uppercase tracking-widest text-foreground">Email</p>
-            <a href="mailto:info@mithun-erp.com" className="transition-colors hover:text-accent">
-              info@mithun-erp.com
-            </a>
-          </div>
-          <div>
             <p className="text-xs uppercase tracking-widest text-foreground">Location</p>
             <p>Available for remote engagements worldwide.</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-widest text-foreground">Response time</p>
+            <p>We typically reply within one business day.</p>
           </div>
         </div>
 
