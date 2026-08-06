@@ -3,6 +3,7 @@ import { Cinzel, Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import QuickConnect from "@/components/QuickConnect";
+import ChatWidget from "@/components/ChatWidget";
 import Cursor from "@/components/Cursor";
 import Preloader from "@/components/Preloader";
 import ThemeScript from "./theme-script";
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="flex-1">{children}</main>
         <Footer />
         <QuickConnect />
+        <ChatWidget />
       </body>
     </html>
   );
