@@ -9,13 +9,17 @@ interface CtaButtonProps {
 }
 
 const BASE =
-  "inline-flex items-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-200";
+  "inline-flex items-center gap-2 rounded-sm border border-transparent px-6 py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-200";
 
+// Shadow is deliberately short (small blur/spread) rather than a big soft
+// glow — a large soft shadow reads as washed-out/dull against a dark
+// background. Short + a visible border-color shift on hover reads clearly
+// in both themes.
 const VARIANTS = {
   primary:
-    "bg-accent text-white hover:-translate-y-0.5 hover:bg-accent-strong hover:shadow-[0_12px_30px_-12px_var(--accent-glow)]",
+    "bg-accent text-white hover:-translate-y-0.5 hover:border-accent-glow hover:bg-accent-strong hover:shadow-[0_4px_16px_-6px_var(--accent-glow)]",
   secondary:
-    "border border-panel-border text-foreground hover:-translate-y-0.5 hover:border-accent hover:text-accent",
+    "border-panel-border text-foreground hover:-translate-y-0.5 hover:border-accent hover:text-accent hover:shadow-[0_4px_16px_-8px_var(--accent-glow)]",
 };
 
 // Every internal nav CTA on the site routes through this — a hover lift +

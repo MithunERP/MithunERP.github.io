@@ -1,15 +1,14 @@
-"use client";
-
-import { useState } from "react";
-
-// TODO: replace with real handles/numbers — see docs/plan.md in the backend repo.
+// TODO: replace WhatsApp/social "#" placeholders with real handles — see
+// docs/plan.md in the backend repo. Email intentionally routes to the
+// contact form rather than a mailto: link — the address itself is never
+// exposed in this public repo's source.
 const CHANNELS = [
-  { label: "WhatsApp", href: "#", kind: "whatsapp" as const },
-  { label: "Call", href: "tel:+10000000000", kind: "phone" as const },
-  { label: "Email", href: "mailto:mithunhasan@live.com", kind: "mail" as const },
-  { label: "Facebook", href: "#", kind: "facebook" as const },
-  { label: "Instagram", href: "#", kind: "instagram" as const },
-  { label: "LinkedIn", href: "#", kind: "linkedin" as const },
+  { label: "WhatsApp", href: "#", kind: "whatsapp" as const, external: true },
+  { label: "Call", href: "tel:+10000000000", kind: "phone" as const, external: true },
+  { label: "Email", href: "/contact", kind: "mail" as const, external: false },
+  { label: "Facebook", href: "#", kind: "facebook" as const, external: true },
+  { label: "Instagram", href: "#", kind: "instagram" as const, external: true },
+  { label: "LinkedIn", href: "#", kind: "linkedin" as const, external: true },
 ];
 
 type ChannelKind = (typeof CHANNELS)[number]["kind"];
@@ -85,49 +84,26 @@ function ChannelIcon({ kind }: { kind: ChannelKind }) {
   );
 }
 
+// Always-expanded vertical stack, fixed to the left-center edge — distinct
+// from ChatWidget's bottom-left launcher, and hidden below md since a
+// vertically-centered fixed column would otherwise sit on top of page
+// content on narrow screens.
 export default function QuickConnect() {
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
-      {open && (
-        <div className="flex flex-col items-end gap-3">
-          {CHANNELS.map((channel) => (
-            <a
-              key={channel.label}
-              href={channel.href}
-              title={channel.label}
-              aria-label={channel.label}
-              target={channel.href.startsWith("#") ? undefined : "_blank"}
-              rel={channel.href.startsWith("#") ? undefined : "noreferrer"}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-panel-border bg-panel text-foreground shadow-lg transition-colors hover:border-accent hover:text-accent"
-            >
-              <ChannelIcon kind={channel.kind} />
-            </a>
-          ))}
-        </div>
-      )}
-
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close quick connect menu" : "Open quick connect menu"}
-        aria-expanded={open}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-transform hover:bg-accent-strong"
-      >
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="transition-transform"
-          style={{ transform: open ? "rotate(45deg)" : "none" }}
+    <div className="fixed left-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 md:flex">
+      {CHANNELS.map((channel) => (
+        <a
+          key={channel.label}
+          href={channel.href}
+          title={channel.label}
+          aria-label={channel.label}
+          target={channel.external ? "_blank" : undefined}
+          rel={channel.external ? "noreferrer" : undefined}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-transparent bg-panel text-foreground shadow-md transition-all duration-200 hover:-translate-x-0.5 hover:border-accent hover:text-accent hover:shadow-[0_4px_16px_-6px_var(--accent-glow)]"
         >
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-      </button>
+          <ChannelIcon kind={channel.kind} />
+        </a>
+      ))}
     </div>
   );
 }

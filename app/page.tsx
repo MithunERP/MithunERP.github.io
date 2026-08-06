@@ -1,6 +1,7 @@
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import CtaButton from "@/components/CtaButton";
+import Divider from "@/components/Divider";
 
 const PILLARS = [
   {
@@ -23,16 +24,19 @@ const PILLARS = [
 export default function Home() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-panel-border">
+      <section className="relative overflow-hidden">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--accent-strong)_0%,_transparent_55%)] opacity-30"
         />
         <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-28 md:grid-cols-2 md:items-center md:py-36">
           <Reveal>
-            <p className="mb-4 text-xs uppercase tracking-[0.3em] text-accent">
-              Web · Software · Photography
-            </p>
+            <div className="mb-4 flex items-center gap-3">
+              <span aria-hidden className="h-6 w-[3px] shrink-0 bg-accent" />
+              <p className="font-display text-sm italic text-accent">
+                Web · Software · Photography
+              </p>
+            </div>
             <h1 className="max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl">
               Crafted in shadow, <span className="text-accent">built to command attention.</span>
             </h1>
@@ -70,6 +74,8 @@ export default function Home() {
         </div>
       </section>
 
+      <Divider />
+
       <section className="mx-auto max-w-6xl px-6 py-20">
         <Reveal>
           <SectionHeading label="Overview" title="What we do" />
@@ -86,7 +92,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-t border-panel-border">
+      <Divider />
+
+      <section>
         <Reveal className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-6 py-20 md:flex-row md:items-center md:justify-between">
           <h2 className="font-display text-2xl text-foreground md:text-3xl">
             Ready to bring your project into the light?

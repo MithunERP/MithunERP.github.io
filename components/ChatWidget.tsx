@@ -166,7 +166,7 @@ export default function ChatWidget() {
         aria-label={open ? "Close chat" : "Start a chat"}
         aria-expanded={open}
         data-cursor-hover
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-transform hover:-translate-y-0.5 hover:bg-accent-strong"
+        className="flex h-14 w-14 items-center justify-center rounded-full border border-transparent bg-accent text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-glow hover:bg-accent-strong hover:shadow-[0_4px_16px_-6px_var(--accent-glow)]"
       >
         <svg
           width="22"

@@ -7,10 +7,12 @@ interface SectionHeadingProps {
   className?: string;
 }
 
-// The eyebrow-label + large-title pattern repeated (previously hand-copied)
-// across about/page.tsx, services/page.tsx, and similar pages. `as`
-// defaults to h2 for in-page section headers; pass as="h1" for a page's
-// main heading (keep one h1 per page).
+// Vertical accent bar + italic serif label beside the title, rather than a
+// small uppercase/wide-tracking label centered above it — that pattern is
+// extremely common across agency/SaaS sites and was flagged as reading too
+// close to a specific client site's design, so this is a deliberately
+// different typographic treatment, not just a restyle. `as` defaults to h2
+// for in-page section headers; pass as="h1" for a page's main heading.
 export default function SectionHeading({
   label,
   title,
@@ -19,8 +21,11 @@ export default function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <div className={className}>
-      <p className="text-xs uppercase tracking-[0.3em] text-accent">{label}</p>
-      <Heading className="mt-4 font-display text-3xl text-foreground md:text-5xl">
+      <div className="flex items-center gap-3">
+        <span aria-hidden className="h-6 w-[3px] shrink-0 bg-accent" />
+        <p className="font-display text-sm italic text-accent">{label}</p>
+      </div>
+      <Heading className="mt-3 font-display text-3xl text-foreground md:text-5xl">
         {title}
       </Heading>
     </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
+import Divider from "@/components/Divider";
 
 export const metadata: Metadata = {
   title: "About — MithunERP",
@@ -31,10 +32,9 @@ export default function AboutPage() {
         </p>
       </Reveal>
 
-      <Reveal
-        delay={1}
-        className="mt-16 grid grid-cols-3 gap-6 border-t border-panel-border pt-10"
-      >
+      <Divider className="mt-16" />
+
+      <Reveal delay={1} className="grid grid-cols-3 gap-6">
         {STATS.map((stat) => (
           <div key={stat.label}>
             <p className="font-display text-3xl text-accent md:text-4xl">{stat.value}</p>
