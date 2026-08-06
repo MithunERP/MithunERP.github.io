@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 
 const OWNER = process.env.NEXT_PUBLIC_GITHUB_OWNER ?? "MithunERP";
-// The site's own source repos aren't "projects" in the showcase sense.
-const EXCLUDED = new Set(["MithunERP.github.io", "shade"]);
+// The site's own source repo isn't a "project" in the showcase sense. The
+// backend (mithunerp-source) lives under a different, personal GitHub
+// account now (see ADR 0004 in mithunerp-source/docs), so it never appears
+// in this org's fetched repo list and doesn't need an entry here.
+const EXCLUDED = new Set(["MithunERP.github.io"]);
 
 interface Repo {
   id: number;

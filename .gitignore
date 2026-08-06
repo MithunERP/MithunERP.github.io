@@ -43,7 +43,7 @@ next-env.d.ts
 
 # ---------------------------------------------------------------------------
 # Confidential project docs — never pushed to GitHub (this repo is public).
-# See CLAUDE.md and shade/docs/hooks-readme.md for the full rule.
+# See CLAUDE.md and mithunerp-source/docs/hooks-readme.md for the full rule.
 # ---------------------------------------------------------------------------
 CLAUDE.md
 /docs/

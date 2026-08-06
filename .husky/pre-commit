@@ -4,6 +4,6 @@ blocked=$(echo "$staged" | grep -E '(^|/)(CLAUDE\.md|docs/|\.claude/|idea)' || t
 if [ -n "$blocked" ]; then
   echo "Blocked: confidential files staged for commit:"
   echo "$blocked"
-  echo "These must never be pushed — see shade/docs/hooks-readme.md."
+  echo "These must never be pushed — see mithunerp-source/docs/hooks-readme.md."
   exit 1
 fi
