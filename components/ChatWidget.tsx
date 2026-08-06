@@ -17,11 +17,11 @@ function readLocal(key: string): string {
   return window.localStorage.getItem(key) ?? "";
 }
 
-// Floating chat launcher + panel — bottom-left, deliberately distinct from
-// QuickConnect's bottom-right menu since this opens an in-page panel
-// rather than handing off to another app/site. Polls for new messages
-// (including admin replies) every ~4s while open; see the backend's
-// ADR 0005 for why polling instead of WebSockets/a realtime vendor.
+// Floating chat launcher + panel — bottom-right. QuickConnect (social/
+// contact links) lives at the left-center edge instead, so the two never
+// overlap. Polls for new messages (including admin replies) every ~4s
+// while open; see the backend's ADR 0005 for why polling instead of
+// WebSockets/a realtime vendor.
 export default function ChatWidget() {
   const [visitorToken] = useState(() => getOrCreateVisitorToken());
   const [open, setOpen] = useState(false);
@@ -88,7 +88,7 @@ export default function ChatWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 flex flex-col items-start gap-3">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {open && (
         <div className="flex w-80 flex-col overflow-hidden rounded-sm border border-panel-border bg-panel shadow-xl">
           <div className="flex items-center justify-between border-b border-panel-border px-4 py-3">
