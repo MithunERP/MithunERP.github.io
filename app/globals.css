@@ -290,3 +290,54 @@ html.has-custom-cursor button {
     transition: none;
   }
 }
+
+/* ============================================================
+   Page transitions — React's <ViewTransition>, native browser
+   View Transitions API under the hood. Applied per-route in
+   app/template.tsx (+ nested app/blog, app/services templates,
+   since layouts persist across navigation and never re-trigger
+   enter/exit). See react-canary.d.ts for why this needs a type
+   declaration the rest of the app doesn't.
+   ============================================================ */
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.page-out) {
+  animation:
+    150ms ease-in both page-fade reverse,
+    260ms ease-in both page-slide reverse;
+}
+
+::view-transition-new(.page-in) {
+  animation:
+    210ms ease-out 120ms both page-fade,
+    320ms ease-out both page-slide;
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes page-slide {
+  from {
+    translate: 0 14px;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

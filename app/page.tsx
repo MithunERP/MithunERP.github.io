@@ -1,6 +1,6 @@
-import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
+import CtaButton from "@/components/CtaButton";
 
 const PILLARS = [
   {
@@ -28,7 +28,7 @@ export default function Home() {
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--accent-strong)_0%,_transparent_55%)] opacity-30"
         />
-        <div className="relative mx-auto flex max-w-6xl flex-col items-start px-6 py-28 md:py-36">
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-28 md:grid-cols-2 md:items-center md:py-36">
           <Reveal>
             <p className="mb-4 text-xs uppercase tracking-[0.3em] text-accent">
               Web · Software · Photography
@@ -42,18 +42,29 @@ export default function Home() {
               not a template.
             </p>
             <div className="mt-10 flex gap-4">
-              <Link
-                href="/services"
-                className="rounded-sm bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-accent-strong"
-              >
-                Explore Services
-              </Link>
-              <Link
-                href="/contact"
-                className="rounded-sm border border-panel-border px-6 py-3 text-sm font-semibold uppercase tracking-widest text-foreground transition-colors hover:border-accent hover:text-accent"
-              >
+              <CtaButton href="/services">Explore Services</CtaButton>
+              <CtaButton href="/contact" variant="secondary">
                 Start a Project
-              </Link>
+              </CtaButton>
+            </div>
+          </Reveal>
+
+          <Reveal delay={2} className="hidden md:block">
+            <div className="relative aspect-square overflow-hidden rounded-sm border border-panel-border bg-panel">
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-[linear-gradient(160deg,_var(--panel)_0%,_var(--accent-strong)_150%)] opacity-70"
+              />
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:28px_28px]"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-16 -right-6 select-none font-display text-[260px] font-black leading-none text-accent/[0.09]"
+              >
+                M
+              </div>
             </div>
           </Reveal>
         </div>
@@ -80,12 +91,7 @@ export default function Home() {
           <h2 className="font-display text-2xl text-foreground md:text-3xl">
             Ready to bring your project into the light?
           </h2>
-          <Link
-            href="/contact"
-            className="rounded-sm bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-accent-strong"
-          >
-            Get in Touch
-          </Link>
+          <CtaButton href="/contact">Get in Touch</CtaButton>
         </Reveal>
       </section>
     </>
