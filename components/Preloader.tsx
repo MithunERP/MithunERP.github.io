@@ -2,19 +2,24 @@
 
 import { useEffect, useState } from "react";
 
+const FILL_MS = 550;
+const FADE_MS = 350;
+
 // Fake percentage-counter preloader, shown once on the real initial page
 // load (mounted in the root layout, which Next.js doesn't remount on
 // client-side navigation, so it never reappears on route changes).
-// Two safeguards beyond the reference pattern this was adapted from: if
-// `load` already fired before this mounted (readyState is already
-// "complete" — common once hydrated), skip showing it at all rather than
-// waiting on an event that already happened; and a hard timeout forces it
-// away regardless, so a full-screen overlay can never get stuck.
+//
+// Deliberately NOT tied to the real `window.load` event: that event only
+// fires once every resource (fonts, images) has finished, which on GitHub
+// Pages' shared CDN can vary and stretch out — a purely decorative
+// progress bar has no business blocking on real, unpredictable network
+// timing. Instead it runs a short fixed-duration animation and then
+// unmounts, so the wait is always the same and always brief.
 export default function Preloader() {
   const [percent, setPercent] = useState(0);
-  // Lazy initializer (not an effect) — if `load` already fired before this
-  // mounted (readyState already "complete", common once hydrated), start
-  // already-hidden instead of waiting on an event that already happened.
+  // Lazy initializer (not an effect) — if this mounts well after paint
+  // (readyState already "complete", common once hydrated), skip the show
+  // entirely rather than animating a loader after the page is long visible.
   const [visible, setVisible] = useState(
     () => !(typeof document !== "undefined" && document.readyState === "complete"),
   );
@@ -23,30 +28,23 @@ export default function Preloader() {
   useEffect(() => {
     if (!visible) return;
 
-    let finished = false;
+    const start = performance.now();
 
-    function finish() {
-      if (finished) return;
-      finished = true;
-      clearInterval(tickTimer);
-      setPercent(100);
-      setTimeout(() => {
+    function tick(now: number) {
+      const elapsed = now - start;
+      setPercent(Math.min((elapsed / FILL_MS) * 100, 100));
+
+      if (elapsed >= FILL_MS) {
         setFading(true);
-        setTimeout(() => setVisible(false), 600);
-      }, 250);
+        setTimeout(() => setVisible(false), FADE_MS);
+        return;
+      }
+
+      frame = requestAnimationFrame(tick);
     }
 
-    const tickTimer = setInterval(() => {
-      setPercent((p) => Math.min(p + Math.random() * 12, 99));
-    }, 80);
-    const maxWaitTimer = setTimeout(finish, 4000);
-
-    window.addEventListener("load", finish);
-    return () => {
-      clearInterval(tickTimer);
-      clearTimeout(maxWaitTimer);
-      window.removeEventListener("load", finish);
-    };
+    let frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
   }, [visible]);
 
   if (!visible) return null;
