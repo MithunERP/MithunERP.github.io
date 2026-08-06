@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 
 const LINKS = [
@@ -15,9 +15,31 @@ const LINKS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  // Lazy initializer (not an effect) so the very first client render
+  // already reflects real scroll position, not just a false default.
+  const [scrolled, setScrolled] = useState(
+    () => typeof window !== "undefined" && window.scrollY > 48,
+  );
+
+  // Transparent at the top of the page, gains a blurred background once
+  // scrolled — same threshold as the reference pattern this was adapted
+  // from (48px).
+  useEffect(() => {
+    function handleScroll() {
+      setScrolled(window.scrollY > 48);
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-panel-border bg-background/90 backdrop-blur">
+    <header
+      className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+        scrolled
+          ? "border-panel-border bg-background/90 backdrop-blur"
+          : "border-transparent bg-transparent"
+      }`}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" aria-label="MithunERP — home" className="flex items-center">
           <Image
