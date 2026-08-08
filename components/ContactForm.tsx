@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
+// Service pages link here with ?subject=<name> Inquiry (see e.g.
+// app/services/web-design/page.tsx) so a visitor arriving from a specific
+// service doesn't have to re-type what they're asking about.
 export default function ContactForm() {
+  const searchParams = useSearchParams();
+  const initialSubject = searchParams.get("subject") ?? "";
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -71,6 +77,7 @@ export default function ContactForm() {
         name="subject"
         type="text"
         required
+        defaultValue={initialSubject}
         placeholder="Subject"
         className="rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
       />

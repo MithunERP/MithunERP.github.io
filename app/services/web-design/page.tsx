@@ -49,7 +49,9 @@ export default async function WebDesignPage() {
       </Reveal>
 
       <div className="mt-12">
-        <CtaButton href="/contact">Start a Web Design Project</CtaButton>
+        <CtaButton href={`/contact?subject=${encodeURIComponent(`${service.name} Inquiry`)}`}>
+          Start a Web Design Project
+        </CtaButton>
       </div>
     </div>
   );

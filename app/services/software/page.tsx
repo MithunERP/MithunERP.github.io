@@ -47,7 +47,9 @@ export default async function SoftwarePage() {
       </Reveal>
 
       <div className="mt-12">
-        <CtaButton href="/contact">Discuss a Software Project</CtaButton>
+        <CtaButton href={`/contact?subject=${encodeURIComponent(`${service.name} Inquiry`)}`}>
+          Discuss a Software Project
+        </CtaButton>
       </div>
     </div>
   );

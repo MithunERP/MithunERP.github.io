@@ -50,7 +50,9 @@ export default async function PhotographyPage() {
       </Reveal>
 
       <div className="mt-12">
-        <CtaButton href="/contact">Book a Shoot</CtaButton>
+        <CtaButton href={`/contact?subject=${encodeURIComponent(`${service.name} Inquiry`)}`}>
+          Book a Shoot
+        </CtaButton>
       </div>
     </div>
   );

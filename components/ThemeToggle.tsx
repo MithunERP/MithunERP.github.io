@@ -8,8 +8,16 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
-    const current = document.documentElement.getAttribute("data-theme") as Theme | null;
-    setTheme(current ?? "dark");
+    // Can't read this in a lazy useState initializer instead: `document` doesn't
+    // exist during server rendering, so that would crash the SSR pass outright,
+    // not just mismatch it. theme-script.tsx sets the real data-theme attribute
+    // on <html> before hydration runs; this effect is the sanctioned way to pull
+    // that already-resolved value from the DOM into this component's own state
+    // once we're definitely on the client — exactly the "external system" case
+    // the lint rule's own docs carve out, not the cascading-render case it's
+    // meant to catch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTheme((document.documentElement.getAttribute("data-theme") as Theme | null) ?? "dark");
   }, []);
 
   function toggle() {
