@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getServiceBySlug } from "@/lib/services";
+import { getPublishedPosts } from "@/lib/posts";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import CtaButton from "@/components/CtaButton";
+import ServicePortfolio from "@/components/ServicePortfolio";
 
 export async function generateMetadata(): Promise<Metadata> {
   const service = await getServiceBySlug("web-design");
@@ -14,7 +16,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function WebDesignPage() {
-  const service = (await getServiceBySlug("web-design"))!;
+  const [service, portfolio] = await Promise.all([
+    getServiceBySlug("web-design"),
+    getPublishedPosts({ type: "portfolio", service: "web-design", limit: 5 }),
+  ]);
+  const s = service!;
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-20">
@@ -23,12 +29,12 @@ export default async function WebDesignPage() {
       </Link>
 
       <Reveal className="mt-6">
-        <SectionHeading as="h1" label={service.name} title={service.tagline} />
-        <p className="mt-6 max-w-2xl text-muted">{service.summary}</p>
+        <SectionHeading as="h1" label={s.name} title={s.tagline} />
+        <p className="mt-6 max-w-2xl text-muted">{s.summary}</p>
       </Reveal>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2">
-        {service.items.map((item, i) => (
+        {s.items.map((item, i) => (
           <Reveal key={item} delay={((i % 3) + 1) as 1 | 2 | 3}>
             <div className="rounded-sm border border-panel-border bg-panel p-6">
               <p className="text-sm text-foreground">{item}</p>
@@ -37,19 +43,10 @@ export default async function WebDesignPage() {
         ))}
       </div>
 
-      <Reveal className="mt-16 rounded-sm border border-panel-border bg-panel p-8">
-        <p className="font-display text-lg text-foreground">
-          {/* Placeholder — replace with real portfolio pieces once available. */}
-          Portfolio
-        </p>
-        <p className="mt-2 text-sm text-muted">
-          Selected work goes here once real projects are ready to show — reach out and we&apos;ll
-          walk through examples directly.
-        </p>
-      </Reveal>
+      <ServicePortfolio posts={portfolio} serviceSlug="web-design" />
 
       <div className="mt-12">
-        <CtaButton href={`/contact?subject=${encodeURIComponent(`${service.name} Inquiry`)}`}>
+        <CtaButton href={`/contact?subject=${encodeURIComponent(`${s.name} Inquiry`)}`}>
           Start a Web Design Project
         </CtaButton>
       </div>

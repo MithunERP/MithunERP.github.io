@@ -26,7 +26,7 @@ function PostsList({ filter }: { filter: PostType | "all" }) {
   useEffect(() => {
     let cancelled = false;
 
-    getPublishedPosts(filter === "all" ? undefined : filter)
+    getPublishedPosts(filter === "all" ? {} : { type: filter })
       .then((data) => {
         if (cancelled) return;
         setState({ status: data.length > 0 ? "ready" : "empty", posts: data });

@@ -8,6 +8,7 @@ export interface PostSummary {
   title: string;
   excerpt: string | null;
   post_type: PostType;
+  service_slug: string | null;
   cover_image_url: string | null;
   published_at: string;
 }
@@ -17,9 +18,17 @@ export interface PostDetail extends PostSummary {
   content_html: string;
 }
 
-export async function getPublishedPosts(type?: PostType): Promise<PostSummary[]> {
+export interface GetPostsOptions {
+  type?: PostType;
+  service?: string;
+  limit?: number;
+}
+
+export async function getPublishedPosts(options: GetPostsOptions = {}): Promise<PostSummary[]> {
   const url = new URL(`${API_URL}/api/posts`);
-  if (type) url.searchParams.set("type", type);
+  if (options.type) url.searchParams.set("type", options.type);
+  if (options.service) url.searchParams.set("service", options.service);
+  if (options.limit) url.searchParams.set("limit", String(options.limit));
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`Failed to load posts (${res.status})`);
