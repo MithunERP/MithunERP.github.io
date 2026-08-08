@@ -4,16 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import type { NavLink } from "@/lib/settings";
 
-const LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/services", label: "Services" },
-  { href: "/blog", label: "Blog" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
-
-export default function Navbar() {
+// nav_links comes from the CMS (site_settings.header, see Phase 2.1) —
+// fetched once in app/layout.tsx (a Server Component) and passed down,
+// since this component itself needs "use client" for scroll/menu state.
+export default function Navbar({ links }: { links: NavLink[] }) {
   const [open, setOpen] = useState(false);
   // Lazy initializer (not an effect) so the very first client render
   // already reflects real scroll position, not just a false default.
@@ -41,29 +37,19 @@ export default function Navbar() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" aria-label="MithunERP — home" className="flex items-center">
+        <Link href="/" aria-label="MithunERP — home" className="group flex items-center">
           <Image
-            src="/logo-dark.png"
+            src="/brand/me.svg"
             alt="MithunERP"
             width={44}
             height={44}
             priority
-            data-theme-variant="dark"
-            className="brand-mark h-11 w-11"
-          />
-          <Image
-            src="/logo-light.png"
-            alt="MithunERP"
-            width={44}
-            height={44}
-            priority
-            data-theme-variant="light"
-            className="brand-mark h-11 w-11"
+            className="h-11 w-11 transition-[filter] duration-300 group-hover:drop-shadow-[0_0_10px_var(--accent-glow)]"
           />
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {LINKS.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -93,7 +79,7 @@ export default function Navbar() {
 
       {open && (
         <nav className="flex flex-col gap-1 border-t border-panel-border px-6 py-4 md:hidden">
-          {LINKS.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}

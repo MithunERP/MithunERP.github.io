@@ -59,21 +59,6 @@ body {
   color: var(--foreground);
 }
 
-/* Theme-swapped logo: both images render, CSS picks the one matching
-   data-theme so there's no flash/JS needed (same mechanism as the color
-   tokens above). */
-.brand-mark {
-  display: none;
-}
-
-:root[data-theme="dark"] .brand-mark[data-theme-variant="dark"] {
-  display: block;
-}
-
-:root[data-theme="light"] .brand-mark[data-theme-variant="light"] {
-  display: block;
-}
-
 /* Sanitized markdown-rendered post content (see lib/posts.ts / app/blog/post) —
    no typography plugin installed, so styled directly here. */
 .post-content {

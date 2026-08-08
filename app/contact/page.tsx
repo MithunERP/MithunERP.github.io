@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import ContactForm from "@/components/ContactForm";
-import Reveal from "@/components/Reveal";
-import SectionHeading from "@/components/SectionHeading";
+import BlockRenderer from "@/components/BlockRenderer";
 import { getSiteSettings } from "@/lib/settings";
+import { getPublishedServices } from "@/lib/services";
+import { getPageBlocks } from "@/lib/pageBlocks";
 
 export const metadata: Metadata = {
   title: "Contact — MithunERP",
@@ -11,31 +10,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const { contact } = await getSiteSettings();
+  const [settings, services, blocks] = await Promise.all([
+    getSiteSettings(),
+    getPublishedServices(),
+    getPageBlocks("contact"),
+  ]);
 
-  return (
-    <div className="mx-auto max-w-4xl px-6 py-20">
-      <Reveal>
-        <SectionHeading as="h1" label="Contact" title="Get In Touch" />
-        <p className="mt-6 max-w-xl text-muted">{contact.intro}</p>
-      </Reveal>
-
-      <Reveal delay={1} className="mt-12 grid gap-12 md:grid-cols-[1fr_1.4fr]">
-        <div className="space-y-6 text-sm text-muted">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-foreground">Location</p>
-            <p>{contact.location}</p>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-widest text-foreground">Response time</p>
-            <p>{contact.response_time}</p>
-          </div>
-        </div>
-
-        <Suspense fallback={null}>
-          <ContactForm />
-        </Suspense>
-      </Reveal>
-    </div>
-  );
+  return <BlockRenderer blocks={blocks} settings={settings} services={services} />;
 }

@@ -1,12 +1,9 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
-export type QuickLinkKind = "whatsapp" | "phone" | "mail" | "facebook" | "instagram" | "linkedin";
-
 export interface QuickLink {
   id: string;
   label: string;
   href: string;
-  kind: QuickLinkKind;
   external: boolean;
   sort_order: number;
 }

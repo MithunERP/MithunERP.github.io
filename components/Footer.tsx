@@ -17,6 +17,16 @@ export default async function Footer() {
             </p>
             <p className="mt-2 max-w-xs">{footer.tagline}</p>
           </div>
+          {footer.columns.map((column) => (
+            <div key={column.heading} className="flex flex-col gap-1">
+              <span className="text-foreground">{column.heading}</span>
+              {column.links.map((link) => (
+                <Link key={link.href} href={link.href} className="transition-colors hover:text-accent">
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          ))}
           <div className="flex flex-col gap-1">
             <span className="text-foreground">Get in touch</span>
             <Link href="/contact" className="transition-colors hover:text-accent">

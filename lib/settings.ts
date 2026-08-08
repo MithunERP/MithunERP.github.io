@@ -7,7 +7,6 @@ export interface HeroSettings {
   description: string;
   cta_primary_label: string;
   cta_secondary_label: string;
-  bottom_cta_heading: string;
 }
 
 export interface AboutSettings {
@@ -21,15 +20,52 @@ export interface ContactSettings {
   response_time: string;
 }
 
+export interface NavLink {
+  label: string;
+  href: string;
+}
+
+export interface HeaderSettings {
+  nav_links: NavLink[];
+}
+
+export interface FooterColumn {
+  heading: string;
+  links: NavLink[];
+}
+
 export interface FooterSettings {
   tagline: string;
+  columns: FooterColumn[];
+}
+
+export interface ThemeColorTokens {
+  background: string;
+  panel: string;
+  panel_border: string;
+  foreground: string;
+  muted: string;
+  accent: string;
+  accent_strong: string;
+  accent_glow: string;
+}
+
+export interface ThemeSettings {
+  colors: {
+    dark: ThemeColorTokens;
+    light: ThemeColorTokens;
+  };
+  font_display: string;
+  font_body: string;
 }
 
 export interface SiteSettings {
   hero: HeroSettings;
   about: AboutSettings;
   contact: ContactSettings;
+  header: HeaderSettings;
   footer: FooterSettings;
+  theme: ThemeSettings;
 }
 
 // Called at build time (Server Components, during `next build`), not from

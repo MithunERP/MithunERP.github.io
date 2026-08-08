@@ -1,15 +1,13 @@
-import { getEnabledQuickLinks, type QuickLinkKind } from "@/lib/quickLinks";
+import { getEnabledQuickLinks } from "@/lib/quickLinks";
+import { detectKind, faviconUrl } from "@/lib/quickLinkIcon";
 
-type ChannelKind = QuickLinkKind;
+// phone/mail have no domain to fetch a favicon from, so they keep a generic
+// hand-drawn icon; every other link renders its own site's real favicon —
+// works for WhatsApp, Facebook, Instagram, LinkedIn, or anything else an
+// admin adds later without needing a matching icon shipped in code.
+function ChannelIcon({ href }: { href: string }) {
+  const kind = detectKind(href);
 
-function ChannelIcon({ kind }: { kind: ChannelKind }) {
-  if (kind === "whatsapp") {
-    return (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-        <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1s-.6.8-.7.9c-.1.1-.3.2-.5.1a6.6 6.6 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.6c-.1-.2 0-.4.1-.5l.4-.4c.1-.1.1-.2.2-.4a.4.4 0 0 0 0-.4c-.1-.1-.5-1.3-.7-1.8-.2-.4-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.1 1.7 2.7 4.2 3.7a4.9 4.9 0 0 0 3 .6 2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .1-1.2c-.1-.1-.2-.2-.4-.3Z" />
-      </svg>
-    );
-  }
   if (kind === "phone") {
     return (
       <svg
@@ -41,36 +39,11 @@ function ChannelIcon({ kind }: { kind: ChannelKind }) {
       </svg>
     );
   }
-  if (kind === "facebook") {
-    return (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-        <path d="M15 3h-2.5C10 3 8.5 4.6 8.5 7.2V10H6v3.5h2.5V21H12v-7.5h2.6l.4-3.5h-3V7.5c0-.9.3-1.5 1.6-1.5H15V3z" />
-      </svg>
-    );
-  }
-  if (kind === "instagram") {
-    return (
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden
-      >
-        <rect x="3" y="3" width="18" height="18" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-      </svg>
-    );
-  }
-  // linkedin
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM20.5 21h-3.37v-6.4c0-1.53-.03-3.5-2.13-3.5-2.14 0-2.47 1.67-2.47 3.4V21H9.16V8.5h3.24v1.7h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z" />
-    </svg>
-  );
+
+  const icon = faviconUrl(href);
+  if (!icon) return null;
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={icon} alt="" width={18} height={18} style={{ borderRadius: "3px" }} />;
 }
 
 // Always-expanded vertical stack, fixed to the left-center edge — distinct
@@ -93,7 +66,7 @@ export default async function QuickConnect() {
           rel={channel.external ? "noreferrer" : undefined}
           className="flex h-11 w-11 items-center justify-center rounded-full border border-transparent bg-panel text-foreground shadow-md transition-all duration-200 hover:-translate-x-0.5 hover:border-accent hover:text-accent hover:shadow-[0_4px_16px_-6px_var(--accent-glow)]"
         >
-          <ChannelIcon kind={channel.kind} />
+          <ChannelIcon href={channel.href} />
         </a>
       ))}
     </div>
