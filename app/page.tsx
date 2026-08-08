@@ -2,26 +2,13 @@ import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import CtaButton from "@/components/CtaButton";
 import Divider from "@/components/Divider";
+import { getSiteSettings } from "@/lib/settings";
+import { getPublishedServices } from "@/lib/services";
 
-const PILLARS = [
-  {
-    title: "Web Design",
-    description:
-      "Distinctive, fast, accessible websites built to convert — from marketing sites to full web apps.",
-  },
-  {
-    title: "Custom Software",
-    description:
-      "Bespoke software and ERP systems engineered around how your business actually operates.",
-  },
-  {
-    title: "Professional Photography",
-    description:
-      "Editorial-grade product, portrait, and event photography, delivered with a distinct visual identity.",
-  },
-];
+export default async function Home() {
+  const [settings, services] = await Promise.all([getSiteSettings(), getPublishedServices()]);
+  const { hero } = settings;
 
-export default function Home() {
   return (
     <>
       <section className="relative overflow-hidden">
@@ -33,22 +20,16 @@ export default function Home() {
           <Reveal>
             <div className="mb-4 flex items-center gap-3">
               <span aria-hidden className="h-6 w-[3px] shrink-0 bg-accent" />
-              <p className="font-display text-sm italic text-accent">
-                Web · Software · Photography
-              </p>
+              <p className="font-display text-sm italic text-accent">{hero.eyebrow}</p>
             </div>
             <h1 className="max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl">
-              Crafted in shadow, <span className="text-accent">built to command attention.</span>
+              {hero.title_main} <span className="text-accent">{hero.title_accent}</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted">
-              MithunERP is a small studio delivering striking web design, dependable custom
-              software, and professional photography — each project treated as a singular work,
-              not a template.
-            </p>
+            <p className="mt-6 max-w-xl text-lg text-muted">{hero.description}</p>
             <div className="mt-10 flex gap-4">
-              <CtaButton href="/services">Explore Services</CtaButton>
+              <CtaButton href="/services">{hero.cta_primary_label}</CtaButton>
               <CtaButton href="/contact" variant="secondary">
-                Start a Project
+                {hero.cta_secondary_label}
               </CtaButton>
             </div>
           </Reveal>
@@ -81,11 +62,13 @@ export default function Home() {
           <SectionHeading label="Overview" title="What we do" />
         </Reveal>
         <div className="mt-10 grid gap-px overflow-hidden rounded-sm bg-panel-border md:grid-cols-3">
-          {PILLARS.map((pillar, i) => (
-            <Reveal key={pillar.title} delay={((i % 3) + 1) as 1 | 2 | 3}>
+          {services.map((service, i) => (
+            <Reveal key={service.slug} delay={((i % 3) + 1) as 1 | 2 | 3}>
               <div className="h-full bg-panel p-8 transition-colors hover:bg-background">
-                <h3 className="font-display text-xl text-foreground">{pillar.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{pillar.description}</p>
+                <h3 className="font-display text-xl text-foreground">{service.name}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  {service.short_description}
+                </p>
               </div>
             </Reveal>
           ))}
@@ -97,7 +80,7 @@ export default function Home() {
       <section>
         <Reveal className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-6 py-20 md:flex-row md:items-center md:justify-between">
           <h2 className="font-display text-2xl text-foreground md:text-3xl">
-            Ready to bring your project into the light?
+            {hero.bottom_cta_heading}
           </h2>
           <CtaButton href="/contact">Get in Touch</CtaButton>
         </Reveal>

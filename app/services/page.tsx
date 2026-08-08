@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SERVICES } from "@/lib/services";
+import { getPublishedServices } from "@/lib/services";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 
@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   description: "Web design, custom software and ERP, and professional photography services.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getPublishedServices();
+
   return (
     <div className="mx-auto max-w-6xl px-6 py-20">
       <Reveal>
@@ -22,7 +24,7 @@ export default function ServicesPage() {
       </Reveal>
 
       <div className="mt-16 grid gap-px overflow-hidden rounded-sm bg-panel-border md:grid-cols-3">
-        {SERVICES.map((service, i) => (
+        {services.map((service, i) => (
           <Reveal key={service.slug} delay={((i % 3) + 1) as 1 | 2 | 3}>
             <Link
               href={`/services/${service.slug}`}

@@ -35,8 +35,8 @@ builds the static export and publishes it via GitHub Pages (Settings â†’ Pages â
 ```
 app/            Next.js App Router pages
 components/     Shared UI (Navbar, Footer, ThemeToggle, ContactForm, ...)
+lib/            Typed fetch wrappers against the mithunerp-source API
 public/         Static assets, .nojekyll
-legacy-static/  Reference copy of the original plain-HTML site (not built or deployed)
 ```
 
 ---

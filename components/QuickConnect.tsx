@@ -1,17 +1,6 @@
-// TODO: replace WhatsApp/social "#" placeholders with real handles — see
-// docs/plan.md in the backend repo. Email intentionally routes to the
-// contact form rather than a mailto: link — the address itself is never
-// exposed in this public repo's source.
-const CHANNELS = [
-  { label: "WhatsApp", href: "#", kind: "whatsapp" as const, external: true },
-  { label: "Call", href: "tel:+10000000000", kind: "phone" as const, external: true },
-  { label: "Email", href: "/contact", kind: "mail" as const, external: false },
-  { label: "Facebook", href: "#", kind: "facebook" as const, external: true },
-  { label: "Instagram", href: "#", kind: "instagram" as const, external: true },
-  { label: "LinkedIn", href: "#", kind: "linkedin" as const, external: true },
-];
+import { getEnabledQuickLinks, type QuickLinkKind } from "@/lib/quickLinks";
 
-type ChannelKind = (typeof CHANNELS)[number]["kind"];
+type ChannelKind = QuickLinkKind;
 
 function ChannelIcon({ kind }: { kind: ChannelKind }) {
   if (kind === "whatsapp") {
@@ -87,11 +76,14 @@ function ChannelIcon({ kind }: { kind: ChannelKind }) {
 // Always-expanded vertical stack, fixed to the left-center edge — distinct
 // from ChatWidget's bottom-left launcher, and hidden below md since a
 // vertically-centered fixed column would otherwise sit on top of page
-// content on narrow screens.
-export default function QuickConnect() {
+// content on narrow screens. CMS-backed (see lib/quickLinks.ts) — fetched at
+// build time since this is a Server Component in a statically-exported app.
+export default async function QuickConnect() {
+  const channels = await getEnabledQuickLinks();
+
   return (
     <div className="fixed left-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 md:flex">
-      {CHANNELS.map((channel) => (
+      {channels.map((channel) => (
         <a
           key={channel.label}
           href={channel.href}

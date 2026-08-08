@@ -1,53 +1,27 @@
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
 export interface Service {
+  id: string;
   slug: string;
   name: string;
   tagline: string;
   summary: string;
+  short_description: string;
   items: string[];
+  sort_order: number;
 }
 
-export const SERVICES: Service[] = [
-  {
-    slug: "web-design",
-    name: "Web Design",
-    tagline: "Sites and web apps that feel deliberate.",
-    summary:
-      "Every site starts from what it needs to do, not a template — marketing pages that convert, and application UIs people can actually use.",
-    items: [
-      "Marketing & portfolio websites",
-      "Web application UI/UX design",
-      "Responsive, accessible front-end builds",
-      "Design systems & component libraries",
-    ],
-  },
-  {
-    slug: "software",
-    name: "Custom Software & ERP",
-    tagline: "Systems built around how your business actually runs.",
-    summary:
-      "Off-the-shelf software bends your process to fit the tool. Custom software does the opposite — built around your workflow, not a generic template.",
-    items: [
-      "Custom ERP & business process software",
-      "Workflow automation & integrations",
-      "Business analytics & reporting dashboards",
-      "Ongoing support & system maintenance",
-    ],
-  },
-  {
-    slug: "photography",
-    name: "Professional Photography",
-    tagline: "Editorial-grade imagery, delivered on your timeline.",
-    summary:
-      "Product, portrait, and event photography shot and retouched to a consistent visual identity — not just a memory card handed back unedited.",
-    items: [
-      "Product & e-commerce photography",
-      "Portrait & brand photography",
-      "Event coverage",
-      "Photo retouching & delivery galleries",
-    ],
-  },
-];
+// CMS-backed — see mithunerp-source's docs/adr/0006-cms-content-model-and-
+// rebuild-on-publish.md. Called at build time (Server Components), not from
+// the browser, so `output: "export"` still produces real static HTML.
+export async function getPublishedServices(): Promise<Service[]> {
+  const res = await fetch(`${API_URL}/api/services`);
+  if (!res.ok) throw new Error(`Failed to load services (${res.status})`);
+  const data = await res.json();
+  return data.services as Service[];
+}
 
-export function getService(slug: string): Service | undefined {
-  return SERVICES.find((service) => service.slug === slug);
+export async function getServiceBySlug(slug: string): Promise<Service | undefined> {
+  const services = await getPublishedServices();
+  return services.find((service) => service.slug === slug);
 }

@@ -1,8 +1,10 @@
 import Link from "next/link";
 import Divider from "./Divider";
+import { getSiteSettings } from "@/lib/settings";
 
-export default function Footer() {
+export default async function Footer() {
   const year = new Date().getFullYear();
+  const { footer } = await getSiteSettings();
 
   return (
     <footer>
@@ -13,9 +15,7 @@ export default function Footer() {
             <p className="font-display text-lg text-foreground">
               Mithun<span className="text-accent">ERP</span>
             </p>
-            <p className="mt-2 max-w-xs">
-              Web design, custom software, and professional photography — crafted with precision.
-            </p>
+            <p className="mt-2 max-w-xs">{footer.tagline}</p>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-foreground">Get in touch</span>

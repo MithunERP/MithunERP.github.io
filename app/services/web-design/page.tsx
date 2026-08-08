@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getService } from "@/lib/services";
+import { getServiceBySlug } from "@/lib/services";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import CtaButton from "@/components/CtaButton";
 
-const service = getService("web-design")!;
+export async function generateMetadata(): Promise<Metadata> {
+  const service = await getServiceBySlug("web-design");
+  return {
+    title: `${service?.name ?? "Web Design"} — MithunERP`,
+    description: service?.summary,
+  };
+}
 
-export const metadata: Metadata = {
-  title: `${service.name} — MithunERP`,
-  description: service.summary,
-};
+export default async function WebDesignPage() {
+  const service = (await getServiceBySlug("web-design"))!;
 
-export default function WebDesignPage() {
   return (
     <div className="mx-auto max-w-4xl px-6 py-20">
       <Link href="/services" className="text-xs uppercase tracking-widest text-muted hover:text-accent">
