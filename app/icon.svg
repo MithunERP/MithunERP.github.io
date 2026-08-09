@@ -1,5 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="6" fill="#0a0505" />
   <text
     x="16"
     y="17"
@@ -7,8 +6,10 @@
     dominant-baseline="central"
     font-family="Arial, Helvetica, sans-serif"
     font-weight="700"
-    font-size="14"
-    fill="#e63950"
+    font-size="15"
     letter-spacing="0.5"
-  >MH</text>
+    stroke="#0a0505"
+    stroke-width="0.6"
+    paint-order="stroke fill"
+  ><tspan fill="#ffffff">M</tspan><tspan fill="#e63950">E</tspan></text>
 </svg>
