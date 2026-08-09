@@ -27,15 +27,33 @@ export default async function Footer() {
               ))}
             </div>
           ))}
+          {footer.social_links.length > 0 && (
+            <div className="flex flex-col gap-1">
+              <span className="text-foreground">Follow</span>
+              {footer.social_links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-accent"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          )}
           <div className="flex flex-col gap-1">
-            <span className="text-foreground">Get in touch</span>
-            <Link href="/contact" className="transition-colors hover:text-accent">
-              Send us a message →
+            <span className="text-foreground">{footer.contact_cta.heading}</span>
+            <Link href={footer.contact_cta.href} className="transition-colors hover:text-accent">
+              {footer.contact_cta.label}
             </Link>
           </div>
         </div>
         <Divider className="py-6" />
-        <p className="text-center text-xs">&copy; {year} MithunERP. All rights reserved.</p>
+        <p className="text-center text-xs">
+          &copy; {year} {footer.copyright_text}
+        </p>
       </div>
     </footer>
   );

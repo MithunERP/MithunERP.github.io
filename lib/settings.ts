@@ -1,25 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
-export interface HeroSettings {
-  eyebrow: string;
-  title_main: string;
-  title_accent: string;
-  description: string;
-  cta_primary_label: string;
-  cta_secondary_label: string;
-}
-
-export interface AboutSettings {
-  bio_paragraphs: string[];
-  stats: { value: string; label: string }[];
-}
-
-export interface ContactSettings {
-  intro: string;
-  location: string;
-  response_time: string;
-}
-
 export interface NavLink {
   label: string;
   href: string;
@@ -34,9 +14,18 @@ export interface FooterColumn {
   links: NavLink[];
 }
 
+export interface FooterContactCta {
+  heading: string;
+  label: string;
+  href: string;
+}
+
 export interface FooterSettings {
   tagline: string;
   columns: FooterColumn[];
+  social_links: NavLink[];
+  copyright_text: string;
+  contact_cta: FooterContactCta;
 }
 
 export interface ThemeColorTokens {
@@ -59,10 +48,11 @@ export interface ThemeSettings {
   font_body: string;
 }
 
+// Hero/about/contact content moved out of this site-wide singleton into
+// per-page blocks (hero/about_bio/stats/contact_form block props) — see
+// mithunerp-source's docs/adr/0011-cms-admin-redesign.md. What's left here
+// is genuinely site-wide chrome: header nav, footer, and theme.
 export interface SiteSettings {
-  hero: HeroSettings;
-  about: AboutSettings;
-  contact: ContactSettings;
   header: HeaderSettings;
   footer: FooterSettings;
   theme: ThemeSettings;

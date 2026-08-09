@@ -1,5 +1,4 @@
 import BlockRenderer from "@/components/BlockRenderer";
-import { getSiteSettings } from "@/lib/settings";
 import { getPublishedServices } from "@/lib/services";
 import { getPageBlocks } from "@/lib/pageBlocks";
 import { pageMetadata } from "@/lib/metadata";
@@ -10,11 +9,10 @@ export const metadata = pageMetadata(
 );
 
 export default async function ServicesPage() {
-  const [settings, services, blocks] = await Promise.all([
-    getSiteSettings(),
+  const [services, blocks] = await Promise.all([
     getPublishedServices(),
     getPageBlocks("services"),
   ]);
 
-  return <BlockRenderer blocks={blocks} settings={settings} services={services} />;
+  return <BlockRenderer blocks={blocks} services={services} />;
 }

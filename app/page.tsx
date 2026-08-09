@@ -1,26 +1,31 @@
 import type { Metadata } from "next";
 import BlockRenderer from "@/components/BlockRenderer";
-import { getSiteSettings } from "@/lib/settings";
 import { getPublishedServices } from "@/lib/services";
 import { getPageBlocks } from "@/lib/pageBlocks";
 
-// Deduped against the page component's own getSiteSettings() call below by
-// Next's build-time fetch cache — not a second real request.
+const DEFAULT_DESCRIPTION =
+  "MithunERP crafts custom web design, bespoke software, and professional photography.";
+
+// Reuses the same build-time fetch the page component makes below (deduped
+// by Next's fetch cache, not a second real request). Hero content lives in
+// the page's own hero block now, not a site-wide settings singleton — see
+// docs/adr/0011-cms-admin-redesign.md.
 export async function generateMetadata(): Promise<Metadata> {
-  const { hero } = await getSiteSettings();
+  const blocks = await getPageBlocks("home");
+  const heroBlock = blocks.find((b) => b.block_type === "hero");
+  const description = (heroBlock?.props.description as string) || DEFAULT_DESCRIPTION;
   return {
-    description: hero.description,
-    openGraph: { description: hero.description },
-    twitter: { description: hero.description },
+    description,
+    openGraph: { description },
+    twitter: { description },
   };
 }
 
 export default async function Home() {
-  const [settings, services, blocks] = await Promise.all([
-    getSiteSettings(),
+  const [services, blocks] = await Promise.all([
     getPublishedServices(),
     getPageBlocks("home"),
   ]);
 
-  return <BlockRenderer blocks={blocks} settings={settings} services={services} />;
+  return <BlockRenderer blocks={blocks} services={services} />;
 }

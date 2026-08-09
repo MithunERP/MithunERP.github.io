@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getPublishedPosts } from "@/lib/posts";
 import { getPublishedServices } from "@/lib/services";
+import { getPages } from "@/lib/pages";
 
 // Required for `output: "export"` — resolved once at build time (it already
 // fetches services/posts via the same build-time pattern as every page
@@ -8,6 +9,8 @@ import { getPublishedServices } from "@/lib/services";
 export const dynamic = "force-static";
 
 const SITE_URL = "https://mithunerp.github.io";
+
+const CORE_SLUGS = ["home", "about", "services", "contact"];
 
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: "weekly" | "monthly" }[] = [
   { path: "", priority: 1, changeFrequency: "weekly" },
@@ -20,9 +23,10 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: "weekly"
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [services, posts] = await Promise.all([
+  const [services, posts, pages] = await Promise.all([
     getPublishedServices(),
     getPublishedPosts({}),
+    getPages(),
   ]);
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
@@ -44,5 +48,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticEntries, ...serviceEntries, ...postEntries];
+  const pageEntries: MetadataRoute.Sitemap = pages
+    .filter((page) => !CORE_SLUGS.includes(page.slug))
+    .map((page) => ({
+      url: `${SITE_URL}/${page.slug}`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    }));
+
+  return [...staticEntries, ...serviceEntries, ...postEntries, ...pageEntries];
 }

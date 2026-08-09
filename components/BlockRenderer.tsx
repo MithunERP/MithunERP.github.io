@@ -5,20 +5,74 @@ import SectionHeading from "@/components/SectionHeading";
 import CtaButton from "@/components/CtaButton";
 import Divider from "@/components/Divider";
 import ContactForm from "@/components/ContactForm";
-import type { PageBlock } from "@/lib/pageBlocks";
-import type { SiteSettings } from "@/lib/settings";
+import type { BlockLayout, PageBlock } from "@/lib/pageBlocks";
 import type { Service } from "@/lib/services";
 
 const SPACER_HEIGHT: Record<string, string> = { sm: "h-8", md: "h-16", lg: "h-28" };
 
-function Wrap({
-  wide,
+const WIDTH_CLASS: Record<NonNullable<BlockLayout["width"]>, string> = {
+  contained: "max-w-4xl",
+  wide: "max-w-6xl",
+  full: "max-w-none",
+};
+
+const SPACING_TOP_CLASS: Record<NonNullable<BlockLayout["spacing_top"]>, string> = {
+  none: "pt-0",
+  sm: "pt-8",
+  md: "pt-12",
+  lg: "pt-24",
+};
+
+const SPACING_BOTTOM_CLASS: Record<NonNullable<BlockLayout["spacing_bottom"]>, string> = {
+  none: "pb-0",
+  sm: "pb-8",
+  md: "pb-12",
+  lg: "pb-24",
+};
+
+const BACKGROUND_CLASS: Record<NonNullable<BlockLayout["background"]>, string> = {
+  none: "",
+  panel: "bg-panel",
+  "accent-tint": "bg-accent/5",
+};
+
+// Generic per-block layout — every block type that carries real content
+// renders through this, so width/spacing/background are admin-controlled
+// (via each block's Layout sub-section in /admin/pages) instead of hardcoded
+// per block type. `decorate` is for a block's own absolutely-positioned
+// background flourish (hero's radial gradient) — kept separate from the
+// `background` layout option (a plain panel/accent-tint fill) since they can
+// coexist.
+function LayoutWrap({
+  layout,
   children,
+  defaultWidth = "contained",
+  defaultSpacingTop = "md",
+  defaultSpacingBottom = "md",
+  decorate,
 }: {
-  wide?: boolean;
+  layout: BlockLayout;
   children: React.ReactNode;
+  defaultWidth?: NonNullable<BlockLayout["width"]>;
+  defaultSpacingTop?: NonNullable<BlockLayout["spacing_top"]>;
+  defaultSpacingBottom?: NonNullable<BlockLayout["spacing_bottom"]>;
+  decorate?: React.ReactNode;
 }) {
-  return <div className={`mx-auto px-6 py-12 ${wide ? "max-w-6xl" : "max-w-4xl"}`}>{children}</div>;
+  const width = layout.width ?? defaultWidth;
+  const spacingTop = layout.spacing_top ?? defaultSpacingTop;
+  const spacingBottom = layout.spacing_bottom ?? defaultSpacingBottom;
+  const background = layout.background ?? "none";
+
+  return (
+    <section className={`relative overflow-hidden ${BACKGROUND_CLASS[background]}`}>
+      {decorate}
+      <div
+        className={`relative mx-auto px-6 ${WIDTH_CLASS[width]} ${SPACING_TOP_CLASS[spacingTop]} ${SPACING_BOTTOM_CLASS[spacingBottom]}`}
+      >
+        {children}
+      </div>
+    </section>
+  );
 }
 
 // Only the hero/heading/about_bio blocks ever render an <h1> — but the page
@@ -29,11 +83,9 @@ const H1_CAPABLE_TYPES = new Set(["hero", "heading", "about_bio"]);
 
 export default function BlockRenderer({
   blocks,
-  settings,
   services,
 }: {
   blocks: PageBlock[];
-  settings: SiteSettings;
   services: Service[];
 }) {
   const firstH1BlockId = blocks.find((b) => H1_CAPABLE_TYPES.has(b.block_type))?.id;
@@ -42,30 +94,40 @@ export default function BlockRenderer({
     <>
       {blocks.map((block) => {
         const p = block.props;
+        const layout = block.layout ?? {};
 
         switch (block.block_type) {
           case "hero": {
-            const { hero } = settings;
             const HeroHeading = block.id === firstH1BlockId ? "h1" : "h2";
             return (
-              <section key={block.id} className="relative overflow-hidden">
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--accent-strong)_0%,_transparent_55%)] opacity-30"
-                />
-                <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-28 md:grid-cols-2 md:items-center md:py-36">
+              <LayoutWrap
+                key={block.id}
+                layout={layout}
+                defaultWidth="wide"
+                defaultSpacingTop="lg"
+                defaultSpacingBottom="lg"
+                decorate={
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--accent-strong)_0%,_transparent_55%)] opacity-30"
+                  />
+                }
+              >
+                <div className="grid gap-12 md:grid-cols-2 md:items-center">
                   <Reveal>
                     <p className="mb-4 text-xs uppercase tracking-[0.3em] font-bold text-accent">
-                      {hero.eyebrow}
+                      {(p.eyebrow as string) ?? ""}
                     </p>
                     <HeroHeading className="max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl">
-                      {hero.title_main} <span className="text-accent">{hero.title_accent}</span>
+                      {(p.title_main as string) ?? ""} <span className="text-accent">{(p.title_accent as string) ?? ""}</span>
                     </HeroHeading>
-                    <p className="mt-6 max-w-xl text-lg text-muted">{hero.description}</p>
+                    <p className="mt-6 max-w-xl text-lg text-muted">{(p.description as string) ?? ""}</p>
                     <div className="mt-10 flex gap-4">
-                      <CtaButton href="/services">{hero.cta_primary_label}</CtaButton>
-                      <CtaButton href="/contact" variant="secondary">
-                        {hero.cta_secondary_label}
+                      <CtaButton href={(p.cta_primary_href as string) || "/services"}>
+                        {(p.cta_primary_label as string) ?? ""}
+                      </CtaButton>
+                      <CtaButton href={(p.cta_secondary_href as string) || "/contact"} variant="secondary">
+                        {(p.cta_secondary_label as string) ?? ""}
                       </CtaButton>
                     </div>
                   </Reveal>
@@ -88,7 +150,7 @@ export default function BlockRenderer({
                     </div>
                   </Reveal>
                 </div>
-              </section>
+              </LayoutWrap>
             );
           }
 
@@ -97,53 +159,53 @@ export default function BlockRenderer({
             const title = (p.title as string) || "";
             const description = p.description as string | undefined;
             return (
-              <Wrap key={block.id}>
+              <LayoutWrap key={block.id} layout={layout}>
                 <Reveal>
                   <SectionHeading as={block.id === firstH1BlockId ? "h1" : "h2"} label={label} title={title} />
                   {description && <p className="mt-6 max-w-2xl text-muted">{description}</p>}
                 </Reveal>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
           case "about_bio": {
-            const { about } = settings;
             const label = (p.label as string) || "About";
             const title = (p.title as string) || "";
+            const bioParagraphs = (p.bio_paragraphs as string[]) || [];
             return (
-              <Wrap key={block.id}>
+              <LayoutWrap key={block.id} layout={layout}>
                 <Reveal>
                   <SectionHeading as={block.id === firstH1BlockId ? "h1" : "h2"} label={label} title={title} />
-                  {about.bio_paragraphs.map((paragraph, i) => (
+                  {bioParagraphs.map((paragraph, i) => (
                     <p key={i} className={`${i === 0 ? "mt-8" : "mt-4"} text-muted leading-relaxed`}>
                       {paragraph}
                     </p>
                   ))}
                 </Reveal>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
           case "stats": {
-            const { about } = settings;
             const label = p.label as string | undefined;
             const title = p.title as string | undefined;
+            const items = (p.items as { value: string; label: string }[]) || [];
             return (
-              <Wrap key={block.id}>
+              <LayoutWrap key={block.id} layout={layout}>
                 {label && title && (
                   <Reveal className="mb-10">
                     <SectionHeading label={label} title={title} />
                   </Reveal>
                 )}
                 <Reveal className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-                  {about.stats.map((stat) => (
+                  {items.map((stat) => (
                     <div key={stat.label}>
                       <p className="font-display text-3xl text-accent md:text-4xl">{stat.value}</p>
                       <p className="mt-1 text-xs uppercase tracking-widest text-muted">{stat.label}</p>
                     </div>
                   ))}
                 </Reveal>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
@@ -153,7 +215,7 @@ export default function BlockRenderer({
             const title = (p.title as string) || "";
             if (variant === "cards") {
               return (
-                <Wrap key={block.id} wide>
+                <LayoutWrap key={block.id} layout={layout} defaultWidth="wide">
                   <div className="grid gap-px overflow-hidden rounded-sm bg-panel-border sm:grid-cols-2 md:grid-cols-3">
                     {services.map((service, i) => (
                       <Reveal key={service.slug} delay={((i % 3) + 1) as 1 | 2 | 3}>
@@ -178,11 +240,11 @@ export default function BlockRenderer({
                       </Reveal>
                     ))}
                   </div>
-                </Wrap>
+                </LayoutWrap>
               );
             }
             return (
-              <Wrap key={block.id} wide>
+              <LayoutWrap key={block.id} layout={layout} defaultWidth="wide">
                 {label && title && (
                   <Reveal>
                     <SectionHeading label={label} title={title} />
@@ -198,44 +260,46 @@ export default function BlockRenderer({
                     </Reveal>
                   ))}
                 </div>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
           case "contact_form": {
-            const { contact } = settings;
+            const intro = (p.intro as string) || "";
+            const location = (p.location as string) || "";
+            const responseTime = (p.response_time as string) || "";
             return (
-              <Wrap key={block.id}>
+              <LayoutWrap key={block.id} layout={layout}>
                 <Reveal className="mb-6 max-w-xl text-muted">
-                  <p>{contact.intro}</p>
+                  <p>{intro}</p>
                 </Reveal>
                 <Reveal className="grid gap-12 md:grid-cols-[1fr_1.4fr]">
                   <div className="space-y-6 text-sm text-muted">
                     <div>
                       <p className="text-xs uppercase tracking-widest text-foreground">Location</p>
-                      <p>{contact.location}</p>
+                      <p>{location}</p>
                     </div>
                     <div>
                       <p className="text-xs uppercase tracking-widest text-foreground">Response time</p>
-                      <p>{contact.response_time}</p>
+                      <p>{responseTime}</p>
                     </div>
                   </div>
                   <Suspense fallback={null}>
                     <ContactForm />
                   </Suspense>
                 </Reveal>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
           case "richtext": {
             const html = (p.html as string) || "";
             return (
-              <Wrap key={block.id}>
+              <LayoutWrap key={block.id} layout={layout}>
                 <Reveal>
                   <div className="post-content text-muted" dangerouslySetInnerHTML={{ __html: html }} />
                 </Reveal>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
@@ -245,13 +309,13 @@ export default function BlockRenderer({
             const caption = p.caption as string | undefined;
             if (!url) return null;
             return (
-              <Wrap key={block.id}>
+              <LayoutWrap key={block.id} layout={layout}>
                 <Reveal>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={url} alt={alt} className="w-full rounded-sm object-cover" />
                   {caption && <p className="mt-2 text-center text-xs text-muted">{caption}</p>}
                 </Reveal>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
@@ -259,7 +323,7 @@ export default function BlockRenderer({
             const images = (p.images as { url: string; alt: string }[]) || [];
             if (images.length === 0) return null;
             return (
-              <Wrap key={block.id} wide>
+              <LayoutWrap key={block.id} layout={layout} defaultWidth="wide">
                 <Reveal className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                   {images.map((img, i) => (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -271,7 +335,7 @@ export default function BlockRenderer({
                     />
                   ))}
                 </Reveal>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
@@ -279,12 +343,12 @@ export default function BlockRenderer({
             const text = (p.text as string) || "";
             const attribution = p.attribution as string | undefined;
             return (
-              <Wrap key={block.id}>
+              <LayoutWrap key={block.id} layout={layout}>
                 <Reveal className="border-l-2 border-accent pl-6">
                   <p className="font-display text-xl italic text-foreground">&ldquo;{text}&rdquo;</p>
                   {attribution && <p className="mt-3 text-sm text-muted">— {attribution}</p>}
                 </Reveal>
-              </Wrap>
+              </LayoutWrap>
             );
           }
 
@@ -293,27 +357,39 @@ export default function BlockRenderer({
             const buttonLabel = (p.button_label as string) || "";
             const buttonHref = (p.button_href as string) || "/contact";
             return (
-              <section key={block.id}>
-                <Reveal className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-6 py-20 md:flex-row md:items-center md:justify-between">
+              <LayoutWrap key={block.id} layout={layout} defaultWidth="wide" defaultSpacingTop="lg" defaultSpacingBottom="lg">
+                <Reveal className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
                   <h2 className="font-display text-2xl text-foreground md:text-3xl">{heading}</h2>
                   <CtaButton href={buttonHref}>{buttonLabel}</CtaButton>
                 </Reveal>
-              </section>
+              </LayoutWrap>
             );
           }
 
           case "divider":
-            return <Divider key={block.id} />;
+            return (
+              <div key={block.id} className={BACKGROUND_CLASS[layout.background ?? "none"]}>
+                <Divider />
+              </div>
+            );
 
           case "spacer": {
             const size = (p.size as string) || "md";
-            return <div key={block.id} className={SPACER_HEIGHT[size] ?? SPACER_HEIGHT.md} aria-hidden />;
+            return (
+              <div
+                key={block.id}
+                className={`${SPACER_HEIGHT[size] ?? SPACER_HEIGHT.md} ${BACKGROUND_CLASS[layout.background ?? "none"]}`}
+                aria-hidden
+              />
+            );
           }
 
           case "custom_html": {
             const html = (p.html as string) || "";
             return (
-              <div key={block.id} dangerouslySetInnerHTML={{ __html: html }} />
+              <LayoutWrap key={block.id} layout={layout} defaultSpacingTop="none" defaultSpacingBottom="none">
+                <div dangerouslySetInnerHTML={{ __html: html }} />
+              </LayoutWrap>
             );
           }
 
