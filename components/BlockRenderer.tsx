@@ -21,6 +21,12 @@ function Wrap({
   return <div className={`mx-auto px-6 py-12 ${wide ? "max-w-6xl" : "max-w-4xl"}`}>{children}</div>;
 }
 
+// Only the hero/heading/about_bio blocks ever render an <h1> — but the page
+// builder lets an admin add more than one of these to a page, which would
+// silently produce multiple <h1>s (bad for SEO/a11y). Only the first one in
+// position order gets to be the real h1; any later one downgrades to h2.
+const H1_CAPABLE_TYPES = new Set(["hero", "heading", "about_bio"]);
+
 export default function BlockRenderer({
   blocks,
   settings,
@@ -30,6 +36,8 @@ export default function BlockRenderer({
   settings: SiteSettings;
   services: Service[];
 }) {
+  const firstH1BlockId = blocks.find((b) => H1_CAPABLE_TYPES.has(b.block_type))?.id;
+
   return (
     <>
       {blocks.map((block) => {
@@ -38,6 +46,7 @@ export default function BlockRenderer({
         switch (block.block_type) {
           case "hero": {
             const { hero } = settings;
+            const HeroHeading = block.id === firstH1BlockId ? "h1" : "h2";
             return (
               <section key={block.id} className="relative overflow-hidden">
                 <div
@@ -48,11 +57,11 @@ export default function BlockRenderer({
                   <Reveal>
                     <div className="mb-4 flex items-center gap-3">
                       <span aria-hidden className="h-6 w-[3px] shrink-0 bg-accent" />
-                      <p className="font-display text-sm italic text-accent">{hero.eyebrow}</p>
+                      <p className="font-body text-sm font-bold text-accent">{hero.eyebrow}</p>
                     </div>
-                    <h1 className="max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl">
+                    <HeroHeading className="max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl">
                       {hero.title_main} <span className="text-accent">{hero.title_accent}</span>
-                    </h1>
+                    </HeroHeading>
                     <p className="mt-6 max-w-xl text-lg text-muted">{hero.description}</p>
                     <div className="mt-10 flex gap-4">
                       <CtaButton href="/services">{hero.cta_primary_label}</CtaButton>
@@ -91,7 +100,7 @@ export default function BlockRenderer({
             return (
               <Wrap key={block.id}>
                 <Reveal>
-                  <SectionHeading as="h1" label={label} title={title} />
+                  <SectionHeading as={block.id === firstH1BlockId ? "h1" : "h2"} label={label} title={title} />
                   {description && <p className="mt-6 max-w-2xl text-muted">{description}</p>}
                 </Reveal>
               </Wrap>
@@ -105,7 +114,7 @@ export default function BlockRenderer({
             return (
               <Wrap key={block.id}>
                 <Reveal>
-                  <SectionHeading as="h1" label={label} title={title} />
+                  <SectionHeading as={block.id === firstH1BlockId ? "h1" : "h2"} label={label} title={title} />
                   {about.bio_paragraphs.map((paragraph, i) => (
                     <p key={i} className={`${i === 0 ? "mt-8" : "mt-4"} text-muted leading-relaxed`}>
                       {paragraph}
@@ -127,7 +136,7 @@ export default function BlockRenderer({
                     <SectionHeading label={label} title={title} />
                   </Reveal>
                 )}
-                <Reveal className="grid grid-cols-3 gap-6">
+                <Reveal className="grid grid-cols-1 gap-6 sm:grid-cols-3">
                   {about.stats.map((stat) => (
                     <div key={stat.label}>
                       <p className="font-display text-3xl text-accent md:text-4xl">{stat.value}</p>
@@ -146,7 +155,7 @@ export default function BlockRenderer({
             if (variant === "cards") {
               return (
                 <Wrap key={block.id} wide>
-                  <div className="grid gap-px overflow-hidden rounded-sm bg-panel-border md:grid-cols-3">
+                  <div className="grid gap-px overflow-hidden rounded-sm bg-panel-border sm:grid-cols-2 md:grid-cols-3">
                     {services.map((service, i) => (
                       <Reveal key={service.slug} delay={((i % 3) + 1) as 1 | 2 | 3}>
                         <Link
@@ -180,7 +189,7 @@ export default function BlockRenderer({
                     <SectionHeading label={label} title={title} />
                   </Reveal>
                 )}
-                <div className="mt-10 grid gap-px overflow-hidden rounded-sm bg-panel-border md:grid-cols-3">
+                <div className="mt-10 grid gap-px overflow-hidden rounded-sm bg-panel-border sm:grid-cols-2 md:grid-cols-3">
                   {services.map((service, i) => (
                     <Reveal key={service.slug} delay={((i % 3) + 1) as 1 | 2 | 3}>
                       <div className="h-full bg-panel p-8 transition-colors hover:bg-background">

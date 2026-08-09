@@ -26,7 +26,7 @@ export default function PhotoCollage({ images }: { images: GalleryImage[] }) {
   return (
     <div className="mt-16">
       <Link href="/gallery" aria-label="View the full photo gallery" className="block">
-        <div className="grid grid-flow-row-dense auto-rows-[90px] grid-cols-3 gap-3 sm:auto-rows-[110px] sm:grid-cols-4">
+        <div className="grid grid-flow-row-dense grid-cols-2 auto-rows-[80px] gap-3 sm:grid-cols-3 sm:auto-rows-[100px] md:grid-cols-4 md:auto-rows-[110px]">
           {selected.map((img, i) => (
             <div
               key={img.id}

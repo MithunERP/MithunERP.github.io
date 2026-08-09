@@ -4,23 +4,28 @@ import { useEffect, useRef, useState } from "react";
 
 const HOVER_SELECTOR = "a, button, [data-cursor-hover]";
 
+const ENABLE_QUERY = "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
+
 // Custom cursor: a dot pinned to the pointer plus a ring that eases toward
 // it. Only ever mounted on fine-pointer/hover-capable devices (checked via
 // matchMedia) — touch devices get the normal cursor, no custom rendering at
-// all. Hover detection is delegated to document-level mouseover/mouseout
-// rather than the more common "query all links once on load" approach, so
-// it still works for elements that render later (e.g. blog cards fetched
-// client-side by PostsList).
+// all. Also gated on prefers-reduced-motion: replacing the native cursor
+// with a continuously-animating one is exactly the kind of motion that
+// preference asks to skip, so reduced-motion users get the native cursor
+// too, not just a version with less motion. Hover detection is delegated to
+// document-level mouseover/mouseout rather than the more common "query all
+// links once on load" approach, so it still works for elements that render
+// later (e.g. blog cards fetched client-side by PostsList).
 export default function Cursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(
-    () => typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches,
+    () => typeof window !== "undefined" && window.matchMedia(ENABLE_QUERY).matches,
   );
   const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const mq = window.matchMedia(ENABLE_QUERY);
     const handleChange = (e: MediaQueryListEvent) => setEnabled(e.matches);
     mq.addEventListener("change", handleChange);
     return () => mq.removeEventListener("change", handleChange);

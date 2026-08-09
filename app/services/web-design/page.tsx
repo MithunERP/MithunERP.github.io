@@ -6,13 +6,11 @@ import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import CtaButton from "@/components/CtaButton";
 import ServicePortfolio from "@/components/ServicePortfolio";
+import { pageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const service = await getServiceBySlug("web-design");
-  return {
-    title: `${service?.name ?? "Web Design"} — MithunERP`,
-    description: service?.summary,
-  };
+  return pageMetadata(`${service?.name ?? "Web Design"} — MithunERP`, service?.summary ?? "");
 }
 
 export default async function WebDesignPage() {

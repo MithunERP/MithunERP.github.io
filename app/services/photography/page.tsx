@@ -8,13 +8,14 @@ import SectionHeading from "@/components/SectionHeading";
 import CtaButton from "@/components/CtaButton";
 import ServicePortfolio from "@/components/ServicePortfolio";
 import PhotoCollage from "@/components/PhotoCollage";
+import { pageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const service = await getServiceBySlug("photography");
-  return {
-    title: `${service?.name ?? "Professional Photography"} — MithunERP`,
-    description: service?.summary,
-  };
+  return pageMetadata(
+    `${service?.name ?? "Professional Photography"} — MithunERP`,
+    service?.summary ?? "",
+  );
 }
 
 export default async function PhotographyPage() {

@@ -13,7 +13,7 @@ export default function PostCard({
 }) {
   return (
     <Link
-      href={`/blog/post?slug=${encodeURIComponent(post.slug)}`}
+      href={`/blog/${post.slug}`}
       className="group flex flex-col rounded-sm border border-panel-border bg-panel p-6 transition-colors hover:border-accent"
     >
       {post.cover_image_url && (

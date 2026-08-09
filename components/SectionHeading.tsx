@@ -7,7 +7,7 @@ interface SectionHeadingProps {
   className?: string;
 }
 
-// Vertical accent bar + italic serif label beside the title, rather than a
+// Vertical accent bar + bold body-font label beside the title, rather than a
 // small uppercase/wide-tracking label centered above it — that pattern is
 // extremely common across agency/SaaS sites and was flagged as reading too
 // close to a specific client site's design, so this is a deliberately
@@ -23,7 +23,7 @@ export default function SectionHeading({
     <div className={className}>
       <div className="flex items-center gap-3">
         <span aria-hidden className="h-6 w-[3px] shrink-0 bg-accent" />
-        <p className="font-display text-sm italic text-accent">{label}</p>
+        <p className="font-body text-sm font-bold text-accent">{label}</p>
       </div>
       <Heading className="mt-3 font-display text-3xl text-foreground md:text-5xl">
         {title}

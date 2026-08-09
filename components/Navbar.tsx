@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
@@ -38,14 +37,9 @@ export default function Navbar({ links }: { links: NavLink[] }) {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" aria-label="MithunERP — home" className="group flex items-center">
-          <Image
-            src="/brand/me.svg"
-            alt="MithunERP"
-            width={44}
-            height={44}
-            priority
-            className="h-11 w-11 transition-[filter] duration-300 group-hover:drop-shadow-[0_0_10px_var(--accent-glow)]"
-          />
+          <span className="font-display text-xl text-foreground transition-[filter] duration-300 group-hover:drop-shadow-[0_0_10px_var(--accent-glow)]">
+            Mithun<span className="text-accent">ERP</span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -68,7 +62,7 @@ export default function Navbar({ links }: { links: NavLink[] }) {
             aria-label="Toggle navigation menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded border border-panel-border"
+            className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded border border-panel-border"
           >
             <span className="h-px w-5 bg-foreground" />
             <span className="h-px w-5 bg-foreground" />

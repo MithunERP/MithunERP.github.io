@@ -81,7 +81,7 @@ export default function BlogPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-20">
-      <p className="text-xs uppercase tracking-[0.3em] text-accent">Blog</p>
+      <p className="text-xs uppercase tracking-[0.3em] font-bold text-accent">Blog</p>
       <h1 className="mt-4 font-display text-3xl text-foreground md:text-5xl">
         Notes from the studio.
       </h1>

@@ -58,36 +58,60 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label htmlFor="contact-name" className="sr-only">
+            Your Name
+          </label>
+          <input
+            id="contact-name"
+            name="name"
+            type="text"
+            required
+            placeholder="Your Name"
+            className="w-full rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+          />
+        </div>
+        <div>
+          <label htmlFor="contact-email" className="sr-only">
+            Your Email
+          </label>
+          <input
+            id="contact-email"
+            name="email"
+            type="email"
+            required
+            placeholder="Your Email"
+            className="w-full rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+          />
+        </div>
+      </div>
+      <div>
+        <label htmlFor="contact-subject" className="sr-only">
+          Subject
+        </label>
         <input
-          name="name"
+          id="contact-subject"
+          name="subject"
           type="text"
           required
-          placeholder="Your Name"
-          className="rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
-        />
-        <input
-          name="email"
-          type="email"
-          required
-          placeholder="Your Email"
-          className="rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+          defaultValue={initialSubject}
+          placeholder="Subject"
+          className="w-full rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
         />
       </div>
-      <input
-        name="subject"
-        type="text"
-        required
-        defaultValue={initialSubject}
-        placeholder="Subject"
-        className="rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
-      />
-      <textarea
-        name="message"
-        required
-        rows={5}
-        placeholder="Your Message"
-        className="rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
-      />
+      <div>
+        <label htmlFor="contact-message" className="sr-only">
+          Your Message
+        </label>
+        <textarea
+          id="contact-message"
+          name="message"
+          required
+          rows={5}
+          placeholder="Your Message"
+          className="w-full rounded-sm border border-panel-border bg-panel px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+        />
+      </div>
 
       {status === "error" && <p className="text-sm text-accent-glow">{errorMessage}</p>}
 
