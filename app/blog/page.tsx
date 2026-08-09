@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getPublishedPosts, type PostSummary, type PostType } from "@/lib/posts";
+import { getPublishedPosts, type PostSummary } from "@/lib/posts";
 import PostCard from "@/components/PostCard";
 
 type Status = "loading" | "ready" | "empty" | "error";
@@ -11,22 +11,16 @@ interface PostsState {
   posts: PostSummary[];
 }
 
-const FILTERS: { label: string; value: PostType | "all" }[] = [
-  { label: "All", value: "all" },
-  { label: "Blog", value: "blog" },
-  { label: "Portfolio", value: "portfolio" },
-];
-
-// Keyed by `filter` in the parent so a filter change remounts this component —
-// its loading state comes from the useState initializer below, not from a
-// setState call inside the effect body.
-function PostsList({ filter }: { filter: PostType | "all" }) {
+// Blog-only — portfolio posts live at /portfolio instead (see
+// PortfolioBrowser.tsx). Used to also show portfolio posts here behind a
+// filter; the user asked for a clean split instead.
+function PostsList() {
   const [state, setState] = useState<PostsState>({ status: "loading", posts: [] });
 
   useEffect(() => {
     let cancelled = false;
 
-    getPublishedPosts(filter === "all" ? {} : { type: filter })
+    getPublishedPosts({ type: "blog" })
       .then((data) => {
         if (cancelled) return;
         setState({ status: data.length > 0 ? "ready" : "empty", posts: data });
@@ -38,7 +32,7 @@ function PostsList({ filter }: { filter: PostType | "all" }) {
     return () => {
       cancelled = true;
     };
-  }, [filter]);
+  }, []);
 
   const { status, posts } = state;
 
@@ -77,8 +71,6 @@ function PostsList({ filter }: { filter: PostType | "all" }) {
 }
 
 export default function BlogPage() {
-  const [filter, setFilter] = useState<PostType | "all">("all");
-
   return (
     <div className="mx-auto max-w-6xl px-6 py-20">
       <p className="text-xs uppercase tracking-[0.3em] font-bold text-accent">Blog</p>
@@ -89,25 +81,8 @@ export default function BlogPage() {
         Writing on projects, process, and the occasional lesson learned the hard way.
       </p>
 
-      <div className="mt-10 flex gap-3">
-        {FILTERS.map((f) => (
-          <button
-            key={f.value}
-            type="button"
-            onClick={() => setFilter(f.value)}
-            className={`rounded-sm border px-4 py-2 text-xs uppercase tracking-widest transition-colors ${
-              filter === f.value
-                ? "border-accent text-accent"
-                : "border-panel-border text-muted hover:border-accent hover:text-accent"
-            }`}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-
       <div className="mt-10">
-        <PostsList key={filter} filter={filter} />
+        <PostsList />
       </div>
     </div>
   );

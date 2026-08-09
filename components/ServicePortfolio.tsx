@@ -25,9 +25,11 @@ export default function ServicePortfolio({
         </div>
       ) : (
         <>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 flex flex-wrap gap-6">
             {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <div key={post.id} className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+                <PostCard post={post} />
+              </div>
             ))}
           </div>
           <div className="mt-8">

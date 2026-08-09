@@ -43,9 +43,12 @@ function PortfolioList({ service, sort }: { service: string | "all"; sort: Sort 
 
   if (status === "loading") {
     return (
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex flex-wrap gap-6">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="h-56 animate-pulse rounded-sm border border-panel-border bg-panel" />
+          <div
+            key={i}
+            className="h-56 w-full animate-pulse rounded-sm border border-panel-border bg-panel sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
+          />
         ))}
       </div>
     );
@@ -60,9 +63,11 @@ function PortfolioList({ service, sort }: { service: string | "all"; sort: Sort 
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="flex flex-wrap gap-6">
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <div key={post.id} className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+          <PostCard post={post} />
+        </div>
       ))}
     </div>
   );

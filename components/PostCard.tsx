@@ -14,7 +14,7 @@ export default function PostCard({
   return (
     <Link
       href={`/${post.post_type === "portfolio" ? "portfolio" : "blog"}/${post.slug}`}
-      className="group flex flex-col rounded-sm border border-panel-border bg-panel p-6 shadow-md transition-all duration-200 hover:-translate-y-1 hover:border-accent hover:shadow-[0_12px_32px_-8px_var(--accent-glow)]"
+      className="group flex h-full flex-col rounded-sm border border-panel-border bg-panel p-6 shadow-md transition-all duration-200 hover:-translate-y-1 hover:border-accent hover:shadow-[0_12px_32px_-8px_var(--accent-glow)]"
     >
       {post.cover_image_url && (
         // eslint-disable-next-line @next/next/no-img-element
