@@ -9,6 +9,10 @@ import PostDetailView from "@/components/PostDetailView";
 // `posts` rows under the hood. Same shared PostDetailView either way.
 export async function generateStaticParams() {
   const posts = await getPublishedPosts({ type: "portfolio" });
+  // See app/blog/[slug]/page.tsx's comment — output: "export" requires at
+  // least one generated path per dynamic route, even when there's currently
+  // no published content of this type.
+  if (posts.length === 0) return [{ slug: "_placeholder" }];
   return posts.map((post) => ({ slug: post.slug }));
 }
 

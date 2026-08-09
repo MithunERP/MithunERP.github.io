@@ -37,7 +37,7 @@ export default function Navbar({ links }: { links: NavLink[] }) {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" aria-label="MithunERP — home" className="group flex items-center">
-          <span className="font-display text-xl text-foreground transition-[filter] duration-300 group-hover:drop-shadow-[0_0_10px_var(--accent-glow)]">
+          <span className="select-none font-display text-xl text-foreground transition-[filter] duration-300 group-hover:drop-shadow-[0_0_10px_var(--accent-glow)]">
             Mithun<span className="text-accent">ERP</span>
           </span>
         </Link>

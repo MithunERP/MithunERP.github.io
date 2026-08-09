@@ -19,6 +19,10 @@ import { pageMetadata } from "@/lib/metadata";
 // gallery) via the slug checks below; a new service gets the plain layout.
 export async function generateStaticParams() {
   const services = await getPublishedServices();
+  // See app/blog/[slug]/page.tsx's comment — output: "export" requires at
+  // least one generated path per dynamic route, even in the (currently
+  // unlikely, but not impossible) case of zero published services.
+  if (services.length === 0) return [{ slug: "_placeholder" }];
   return services.map((service) => ({ slug: service.slug }));
 }
 

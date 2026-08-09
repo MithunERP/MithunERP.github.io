@@ -16,7 +16,13 @@ const CORE_SLUGS = ["home", "about", "services", "contact"];
 
 export async function generateStaticParams() {
   const pages = await getPages();
-  return pages.filter((page) => !CORE_SLUGS.includes(page.slug)).map((page) => ({ slug: page.slug }));
+  const customPages = pages.filter((page) => !CORE_SLUGS.includes(page.slug));
+  // See app/blog/[slug]/page.tsx's comment — output: "export" requires at
+  // least one generated path per dynamic route. This is the currently-live
+  // case: no custom pages have been created yet, so without this the build
+  // would fail exactly the way /blog/[slug] just did.
+  if (customPages.length === 0) return [{ slug: "_placeholder" }];
+  return customPages.map((page) => ({ slug: page.slug }));
 }
 
 export async function generateMetadata({
