@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
 
+// Required for `output: "export"` — no per-request data here either.
+export const dynamic = "force-static";
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "MithunERP — Web Design, Software & Photography",

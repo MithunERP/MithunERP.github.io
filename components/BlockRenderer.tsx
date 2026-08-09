@@ -55,10 +55,9 @@ export default function BlockRenderer({
                 />
                 <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-28 md:grid-cols-2 md:items-center md:py-36">
                   <Reveal>
-                    <div className="mb-4 flex items-center gap-3">
-                      <span aria-hidden className="h-6 w-[3px] shrink-0 bg-accent" />
-                      <p className="font-body text-sm font-bold text-accent">{hero.eyebrow}</p>
-                    </div>
+                    <p className="mb-4 text-xs uppercase tracking-[0.3em] font-bold text-accent">
+                      {hero.eyebrow}
+                    </p>
                     <HeroHeading className="max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl">
                       {hero.title_main} <span className="text-accent">{hero.title_accent}</span>
                     </HeroHeading>

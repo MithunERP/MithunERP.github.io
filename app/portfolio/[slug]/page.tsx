@@ -4,11 +4,11 @@ import { getPostBySlug, getPublishedPosts } from "@/lib/posts";
 import { postMetadata } from "@/lib/metadata";
 import PostDetailView from "@/components/PostDetailView";
 
-// Only blog-type posts get a static page here — portfolio posts live at
-// /portfolio/[slug] instead (separate route, same shared PostDetailView),
-// so the URL a post is reachable at matches the section it belongs to.
+// Portfolio-type posts get their own URL namespace here, separate from
+// /blog/[slug] — a portfolio piece isn't a blog post, even though both are
+// `posts` rows under the hood. Same shared PostDetailView either way.
 export async function generateStaticParams() {
-  const posts = await getPublishedPosts({ type: "blog" });
+  const posts = await getPublishedPosts({ type: "portfolio" });
   return posts.map((post) => ({ slug: post.slug }));
 }
 
@@ -25,7 +25,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function BlogPostPage({
+export default async function PortfolioPostPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -39,5 +39,5 @@ export default async function BlogPostPage({
     notFound();
   }
 
-  return <PostDetailView post={post} backHref="/blog" backLabel="Blog" />;
+  return <PostDetailView post={post} backHref="/portfolio" backLabel="Portfolio" />;
 }

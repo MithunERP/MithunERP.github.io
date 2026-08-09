@@ -2,6 +2,11 @@ import type { MetadataRoute } from "next";
 import { getPublishedPosts } from "@/lib/posts";
 import { getPublishedServices } from "@/lib/services";
 
+// Required for `output: "export"` — resolved once at build time (it already
+// fetches services/posts via the same build-time pattern as every page
+// here), not per-request, so this is accurate, not a workaround.
+export const dynamic = "force-static";
+
 const SITE_URL = "https://mithunerp.github.io";
 
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: "weekly" | "monthly" }[] = [
@@ -33,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${SITE_URL}/blog/${post.slug}`,
+    url: `${SITE_URL}/${post.post_type === "portfolio" ? "portfolio" : "blog"}/${post.slug}`,
     lastModified: new Date(post.published_at),
     changeFrequency: "monthly",
     priority: 0.5,
