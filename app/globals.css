@@ -54,6 +54,13 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Justified body copy, site-wide — single-line text (labels, eyebrows,
+   buttons) is visually unaffected since justify only acts on wrapped lines,
+   so this is safe as a blanket rule rather than needing a class per <p>. */
+p {
+  text-align: justify;
+}
+
 ::selection {
   background: var(--accent-strong);
   color: var(--foreground);
