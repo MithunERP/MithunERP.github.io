@@ -20,10 +20,16 @@ export interface FooterContactCta {
   href: string;
 }
 
+export type FooterAlignment = "left" | "center" | "right";
+
 export interface FooterSettings {
+  enabled: boolean;
+  show_logo: boolean;
   tagline: string;
   columns: FooterColumn[];
   social_links: NavLink[];
+  copyright_enabled: boolean;
+  copyright_alignment: FooterAlignment;
   copyright_text: string;
   contact_cta: FooterContactCta;
 }
