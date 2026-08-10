@@ -5,6 +5,7 @@ import QuickConnect from "@/components/QuickConnect";
 import ChatWidget from "@/components/ChatWidget";
 import Cursor from "@/components/Cursor";
 import Preloader from "@/components/Preloader";
+import { TransitionsProvider } from "@/components/TransitionsProvider";
 import ThemeScript from "./theme-script";
 import { getSiteSettings, type ThemeSettings } from "@/lib/settings";
 import "./globals.css";
@@ -118,7 +119,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Cursor />
         <Navbar links={header.nav_links} />
         <main id="main-content" className="flex-1">
-          {children}
+          <TransitionsProvider config={theme.transitions}>{children}</TransitionsProvider>
         </main>
         <Footer />
         <QuickConnect />

@@ -319,22 +319,72 @@ html.has-custom-cursor button {
    since layouts persist across navigation and never re-trigger
    enter/exit). See react-canary.d.ts for why this needs a type
    declaration the rest of the app doesn't.
+
+   Five named styles, CMS-selectable at /admin/theme (fixed/random/
+   scheduled — see components/PageTransition.tsx for how the active
+   one is resolved). Class names are applied dynamically by that
+   component; this file just defines what each named style looks like.
    ============================================================ */
 
 ::view-transition {
   pointer-events: none;
 }
 
-::view-transition-old(.page-out) {
+/* ---- fade: quick, mostly-sequential opacity fade ---- */
+
+::view-transition-old(.page-out-fade) {
+  animation: 180ms ease-in both page-fade reverse;
+}
+
+::view-transition-new(.page-in-fade) {
+  animation: 220ms ease-out 60ms both page-fade;
+}
+
+/* ---- overlap: same fade, but both directions run the same, longer
+   duration with no stagger — old and new genuinely cross-blend the
+   whole time, instead of one finishing before the other starts. ---- */
+
+::view-transition-old(.page-out-overlap) {
+  animation: 320ms ease-in-out both page-fade reverse;
+}
+
+::view-transition-new(.page-in-overlap) {
+  animation: 320ms ease-in-out both page-fade;
+}
+
+/* ---- slide: the original default — fade + slide up ---- */
+
+::view-transition-old(.page-out-slide) {
   animation:
     150ms ease-in both page-fade reverse,
     260ms ease-in both page-slide reverse;
 }
 
-::view-transition-new(.page-in) {
+::view-transition-new(.page-in-slide) {
   animation:
     210ms ease-out 120ms both page-fade,
     320ms ease-out both page-slide;
+}
+
+/* ---- zoom: old scales up slightly while fading out, new scales in
+   from slightly smaller ---- */
+
+::view-transition-old(.page-out-zoom) {
+  animation: 180ms ease-in both page-zoom-out;
+}
+
+::view-transition-new(.page-in-zoom) {
+  animation: 260ms ease-out both page-zoom-in;
+}
+
+/* ---- wipe: new page reveals via a clip-path wipe instead of a fade ---- */
+
+::view-transition-old(.page-out-wipe) {
+  animation: 260ms ease-in-out both page-wipe-out;
+}
+
+::view-transition-new(.page-in-wipe) {
+  animation: 260ms ease-in-out both page-wipe-in;
 }
 
 @keyframes page-fade {
@@ -352,6 +402,35 @@ html.has-custom-cursor button {
   }
   to {
     translate: 0 0;
+  }
+}
+
+@keyframes page-zoom-out {
+  to {
+    opacity: 0;
+    scale: 1.04;
+  }
+}
+
+@keyframes page-zoom-in {
+  from {
+    opacity: 0;
+    scale: 0.97;
+  }
+}
+
+@keyframes page-wipe-out {
+  to {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes page-wipe-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
   }
 }
 

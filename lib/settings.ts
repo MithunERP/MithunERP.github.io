@@ -45,6 +45,21 @@ export interface ThemeColorTokens {
   accent_glow: string;
 }
 
+export type TransitionStyle = "fade" | "overlap" | "slide" | "zoom" | "wipe";
+export type TransitionMode = "fixed" | "random" | "scheduled";
+
+// "0".."6" = Sun..Sat, matches JS's Date.getDay() — resolved client-side
+// from the visitor's own clock, see components/PageTransition.tsx.
+export type TransitionSchedule = Partial<Record<"0" | "1" | "2" | "3" | "4" | "5" | "6", TransitionStyle>>;
+
+export interface TransitionSettings {
+  enabled: boolean;
+  mode: TransitionMode;
+  style: TransitionStyle; // used when mode = "fixed"; also the fallback for "scheduled"
+  random_styles: TransitionStyle[]; // pool for mode = "random"
+  schedule: TransitionSchedule; // used when mode = "scheduled"
+}
+
 export interface ThemeSettings {
   colors: {
     dark: ThemeColorTokens;
@@ -52,6 +67,7 @@ export interface ThemeSettings {
   };
   font_display: string;
   font_body: string;
+  transitions: TransitionSettings;
 }
 
 // Hero/about/contact content moved out of this site-wide singleton into
