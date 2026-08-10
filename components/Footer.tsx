@@ -29,7 +29,9 @@ export default async function Footer() {
                 Mithun<span className="text-accent">ERP</span>
               </p>
             )}
-            <p className={footer.show_logo !== false ? "mt-2 max-w-xs" : "max-w-xs"}>{footer.tagline}</p>
+            {footer.tagline && (
+              <p className={footer.show_logo !== false ? "mt-2 max-w-xs" : "max-w-xs"}>{footer.tagline}</p>
+            )}
           </div>
           {footer.columns.map((column) => (
             <div key={column.heading} className="flex flex-col gap-1">
@@ -57,12 +59,16 @@ export default async function Footer() {
               ))}
             </div>
           )}
-          <div className="flex flex-col gap-1">
-            <span className="text-foreground">{footer.contact_cta.heading}</span>
-            <Link href={footer.contact_cta.href} className="transition-colors hover:text-accent">
-              {footer.contact_cta.label}
-            </Link>
-          </div>
+          {footer.contact_cta.heading && (
+            <div className="flex flex-col gap-1">
+              <span className="text-foreground">{footer.contact_cta.heading}</span>
+              {footer.contact_cta.href && (
+                <Link href={footer.contact_cta.href} className="transition-colors hover:text-accent">
+                  {footer.contact_cta.label}
+                </Link>
+              )}
+            </div>
+          )}
         </div>
         {footer.copyright_enabled !== false && (
           <>
