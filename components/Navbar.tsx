@@ -10,28 +10,31 @@ import type { NavLink } from "@/lib/settings";
 // since this component itself needs "use client" for scroll/menu state.
 export default function Navbar({ links }: { links: NavLink[] }) {
   const [open, setOpen] = useState(false);
-  // Lazy initializer (not an effect) so the very first client render
-  // already reflects real scroll position, not just a false default.
-  const [scrolled, setScrolled] = useState(
-    () => typeof window !== "undefined" && window.scrollY > 48,
-  );
+  const [scrolled, setScrolled] = useState(false);
 
-  // Transparent at the top of the page, gains a blurred background once
-  // scrolled — same threshold as the reference pattern this was adapted
-  // from (48px).
+  // Transparent at the top of the page, gains a frosted-glass background
+  // once scrolled — same threshold as the reference pattern this was
+  // adapted from (48px). Calls handleScroll() once immediately on mount,
+  // not just a lazy useState initializer — on a hard refresh while already
+  // scrolled down, the browser's scroll-position restoration can happen
+  // after hydration, so a one-time initializer can read window.scrollY
+  // before the browser has jumped there and get stuck reporting "not
+  // scrolled" until the next manual scroll. Checking again right on mount
+  // (plus the listener for anything after) catches that case.
   useEffect(() => {
     function handleScroll() {
       setScrolled(window.scrollY > 48);
     }
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
-          ? "border-panel-border bg-background/90 backdrop-blur"
+          ? "border-panel-border/60 bg-background/60 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-xl backdrop-saturate-150"
           : "border-transparent bg-transparent"
       }`}
     >

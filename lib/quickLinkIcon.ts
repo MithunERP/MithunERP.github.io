@@ -1,23 +1,36 @@
-// Mirrors mithunerp-source's lib/quickLinkIcon.ts (kind-detection + favicon
-// half only — href normalization happens on save, admin-side).
+// Mirrors mithunerp-source's lib/quickLinkIcon.ts (kind-detection only —
+// icon rendering itself lives in QuickConnect.tsx, mirrored in that repo's
+// QuickLinksManager.tsx).
 
-export type QuickLinkKind = "phone" | "mail" | "external";
+export type QuickLinkKind =
+  | "phone"
+  | "mail"
+  | "whatsapp"
+  | "facebook"
+  | "instagram"
+  | "linkedin"
+  | "external";
 
+// Auto-detected from the href — no manual "kind" field/dropdown (see
+// docs/plan.md round 8 for why that was removed). Recognized platforms get
+// a custom themed icon (QuickConnect.tsx's ChannelIcon); anything else
+// falls back to a generic link icon — no third-party favicon fetch,
+// everything stays on-brand.
 export function detectKind(href: string): QuickLinkKind {
   const trimmed = href.trim();
   if (/^tel:/i.test(trimmed)) return "phone";
   if (/^mailto:/i.test(trimmed) || trimmed === "/contact") return "mail";
-  return "external";
-}
 
-// Google's public favicon service — no API key, no new dependency. A
-// visitor's browser requests the icon directly from google.com at render
-// time; a deliberate, disclosed trade-off, not a silent one.
-export function faviconUrl(href: string, size = 64): string | null {
   try {
-    const url = new URL(href);
-    return `https://www.google.com/s2/favicons?sz=${size}&domain=${url.hostname}`;
+    const hostname = new URL(trimmed).hostname.replace(/^www\./i, "").toLowerCase();
+    if (hostname === "wa.me" || hostname.endsWith("whatsapp.com")) return "whatsapp";
+    if (hostname.endsWith("facebook.com") || hostname === "fb.com") return "facebook";
+    if (hostname.endsWith("instagram.com")) return "instagram";
+    if (hostname.endsWith("linkedin.com")) return "linkedin";
   } catch {
-    return null;
+    // Not a parseable absolute URL (e.g. a bare internal path) — falls
+    // through to the generic icon.
   }
+
+  return "external";
 }
