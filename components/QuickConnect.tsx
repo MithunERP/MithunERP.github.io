@@ -27,8 +27,8 @@ function ChannelIcon({ href }: { href: string }) {
   if (kind === "whatsapp") {
     return (
       <svg {...common} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z" />
-        <path d="M8.5 8.4c.2-.4.4-.4.6-.4h.4c.2 0 .3 0 .5.4.2.4.6 1.5.7 1.6.1.2.1.3 0 .5-.1.2-.2.3-.4.5-.2.2-.4.3-.2.6.2.4.9 1.3 1.8 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.3.1 1.6.7 1.9.9.3.1.4.2.5.3.1.2.1.8-.2 1.5-.3.7-1.5 1.3-2.1 1.4-.6.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.2-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5Z" />
+        <path d="M12 3.5a8.5 8.5 0 0 0-7.4 12.7L3.5 20.5l4.5-1.1A8.5 8.5 0 1 0 12 3.5Z" />
+        <path d="M9.2 8.6c.3-.7.6-.7.9-.7.2 0 .5 0 .7.5.2.5.7 1.7.8 1.8.1.2.1.4-.1.6-.2.3-.3.4-.5.6-.2.2-.4.4-.2.7.3.5 1 1.4 2 2.2 1.3 1.1 2.4 1.4 2.7 1.6.3.2.5.1.7-.1.2-.3.8-.9 1-1.2.2-.3.5-.2.8-.1.3.1 1.8.8 2.1 1 .3.2.5.2.6.4.1.2.1.9-.2 1.7-.3.8-1.7 1.5-2.4 1.6-.6.1-1.4.1-2.3-.1-.5-.1-1.2-.4-2-.7-3.5-1.5-5.7-5-5.9-5.3-.2-.3-1.4-1.9-1.4-3.6s.9-2.5 1.2-2.9Z" />
       </svg>
     );
   }
@@ -36,7 +36,11 @@ function ChannelIcon({ href }: { href: string }) {
     return (
       <svg {...common} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="9" />
-        <path d="M14 8.5h-1.2A1.8 1.8 0 0 0 11 10.3V12H9v2.5h2V20h2.4v-5.5h2l.3-2.5h-2.3v-1.4c0-.3.2-.5.5-.5H14Z" />
+        <path
+          d="M14 8h-1.5c-1 0-1.7.7-1.7 1.8V11H9v2.3h1.8V19h2.4v-5.7h1.9l.3-2.3h-2.2V10c0-.4.2-.7.7-.7H14Z"
+          fill="currentColor"
+          stroke="none"
+        />
       </svg>
     );
   }
@@ -44,8 +48,8 @@ function ChannelIcon({ href }: { href: string }) {
     return (
       <svg {...common} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="5" />
-        <circle cx="12" cy="12" r="3.5" />
-        <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none" />
+        <circle cx="12" cy="12" r="3.8" />
+        <circle cx="17" cy="7" r="0.9" fill="currentColor" stroke="none" />
       </svg>
     );
   }
@@ -53,10 +57,13 @@ function ChannelIcon({ href }: { href: string }) {
     return (
       <svg {...common} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="3" />
-        <circle cx="7.8" cy="7.8" r="0.9" fill="currentColor" stroke="none" />
-        <path d="M7.8 11v7" />
-        <path d="M12 18v-4.5a2.2 2.2 0 0 1 4.4 0V18" />
-        <path d="M12 13.2V18" />
+        <rect x="6.5" y="10" width="2.2" height="8" rx="0.4" fill="currentColor" stroke="none" />
+        <circle cx="7.6" cy="7.2" r="1.3" fill="currentColor" stroke="none" />
+        <path
+          d="M11.5 18v-4.8c0-1.7 1-2.9 2.6-2.9 1.7 0 2.7 1.1 2.7 3V18h-2.3v-4.3c0-.7-.3-1.2-1-1.2s-1.1.5-1.1 1.2V18Z"
+          fill="currentColor"
+          stroke="none"
+        />
       </svg>
     );
   }
