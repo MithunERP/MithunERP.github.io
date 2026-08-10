@@ -30,13 +30,18 @@ export default function Preloader() {
 
     const start = performance.now();
 
+    function finish() {
+      setPercent(100);
+      setFading(true);
+      setTimeout(() => setVisible(false), FADE_MS);
+    }
+
     function tick(now: number) {
       const elapsed = now - start;
       setPercent(Math.min((elapsed / FILL_MS) * 100, 100));
 
       if (elapsed >= FILL_MS) {
-        setFading(true);
-        setTimeout(() => setVisible(false), FADE_MS);
+        finish();
         return;
       }
 
@@ -44,7 +49,21 @@ export default function Preloader() {
     }
 
     let frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+
+    // Safety net: requestAnimationFrame can stall for a long time in a
+    // backgrounded/throttled tab (e.g. the user switches away right after
+    // refreshing) — browsers pause or heavily throttle rAF for hidden tabs,
+    // which used to leave this loader visibly stuck on-screen until the tab
+    // was refocused. A plain setTimeout isn't throttled the same way, so it
+    // guarantees the loader unmounts within a bounded time regardless of
+    // what the rAF loop is doing. Harmless if it fires after the rAF path
+    // already finished — setting already-set state is a no-op.
+    const safetyTimer = setTimeout(finish, FILL_MS + 1000);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(safetyTimer);
+    };
   }, [visible]);
 
   if (!visible) return null;
