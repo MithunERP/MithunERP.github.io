@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPublishedPosts } from "@/lib/posts";
+import { getSiteSettings } from "@/lib/settings";
+import { DEFAULT_DECORATIONS } from "@/lib/decorations";
 import { postMetadata, titleFor } from "@/lib/metadata";
 import PostDetailView from "@/components/PostDetailView";
 
@@ -45,5 +47,14 @@ export default async function BlogPostPage({
     notFound();
   }
 
-  return <PostDetailView post={post} backHref="/blog" backLabel="Blog" />;
+  const settings = await getSiteSettings();
+
+  return (
+    <PostDetailView
+      post={post}
+      backHref="/blog"
+      backLabel="Blog"
+      decorations={settings.theme.decorations ?? DEFAULT_DECORATIONS}
+    />
+  );
 }

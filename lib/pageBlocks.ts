@@ -1,3 +1,5 @@
+import type { EyebrowStyle, EyebrowWeight, HeadingDecoration, QuoteDecoration } from "@/lib/settings";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 // Pages are admin-creatable now (see mithunerp-source's `pages` table,
@@ -26,6 +28,10 @@ export interface BlockLayout {
   spacing_top?: "none" | "sm" | "md" | "lg";
   spacing_bottom?: "none" | "sm" | "md" | "lg";
   background?: "none" | "panel" | "accent-tint";
+  heading_decoration?: HeadingDecoration;
+  eyebrow_style?: EyebrowStyle;
+  eyebrow_weight?: EyebrowWeight;
+  quote_decoration?: QuoteDecoration;
 }
 
 export interface PageBlock {

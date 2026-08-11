@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import BlockRenderer from "@/components/BlockRenderer";
 import { getPublishedServices } from "@/lib/services";
 import { getPageBlocks } from "@/lib/pageBlocks";
+import { getSiteSettings } from "@/lib/settings";
+import { DEFAULT_DECORATIONS } from "@/lib/decorations";
 import { titleFor } from "@/lib/metadata";
 
 const DEFAULT_DESCRIPTION =
@@ -29,10 +31,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [services, blocks] = await Promise.all([
+  const [services, blocks, settings] = await Promise.all([
     getPublishedServices(),
     getPageBlocks("home"),
+    getSiteSettings(),
   ]);
 
-  return <BlockRenderer blocks={blocks} services={services} />;
+  return (
+    <BlockRenderer
+      blocks={blocks}
+      services={services}
+      decorations={settings.theme.decorations ?? DEFAULT_DECORATIONS}
+    />
+  );
 }

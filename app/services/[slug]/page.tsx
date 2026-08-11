@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getServiceBySlug, getPublishedServices } from "@/lib/services";
 import { getPublishedPosts } from "@/lib/posts";
 import { getGalleryImages } from "@/lib/gallery";
+import { getSiteSettings } from "@/lib/settings";
+import { DEFAULT_DECORATIONS } from "@/lib/decorations";
 import GitHubProjects from "@/components/GitHubProjects";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
@@ -52,10 +54,12 @@ export default async function ServiceDetailPage({
   const service = await getServiceBySlug(slug);
   if (!service) notFound();
 
-  const [portfolio, gallery] = await Promise.all([
+  const [portfolio, gallery, settings] = await Promise.all([
     getPublishedPosts({ type: "portfolio", service: slug, limit: 5 }),
     slug === "photography" ? getGalleryImages() : Promise.resolve([]),
+    getSiteSettings(),
   ]);
+  const { eyebrow_style, eyebrow_weight, heading } = settings.theme.decorations ?? DEFAULT_DECORATIONS;
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-20">
@@ -64,7 +68,14 @@ export default async function ServiceDetailPage({
       </Link>
 
       <Reveal className="mt-6">
-        <SectionHeading as="h1" label={service.name} title={service.tagline} />
+        <SectionHeading
+          as="h1"
+          label={service.name}
+          title={service.tagline}
+          eyebrowStyle={eyebrow_style}
+          eyebrowWeight={eyebrow_weight}
+          headingDecoration={heading}
+        />
         <p className="mt-6 max-w-2xl text-muted">{service.summary}</p>
       </Reveal>
 
@@ -92,7 +103,13 @@ export default async function ServiceDetailPage({
           </Reveal>
         ))}
 
-      <ServicePortfolio posts={portfolio} serviceSlug={slug} />
+      <ServicePortfolio
+        posts={portfolio}
+        serviceSlug={slug}
+        eyebrowStyle={eyebrow_style}
+        eyebrowWeight={eyebrow_weight}
+        headingDecoration={heading}
+      />
 
       {slug === "software" && (
         <Reveal className="mt-16">

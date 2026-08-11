@@ -3,19 +3,32 @@ import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import PostCard from "@/components/PostCard";
 import type { PostSummary } from "@/lib/posts";
+import type { EyebrowStyle, EyebrowWeight, HeadingDecoration } from "@/lib/settings";
 
 // Latest-5 portfolio cards for one service, with a link to the full,
 // filterable /portfolio page — used on all three service detail pages.
 export default function ServicePortfolio({
   posts,
   serviceSlug,
+  eyebrowStyle = "plain",
+  eyebrowWeight = "bold",
+  headingDecoration = "plain",
 }: {
   posts: PostSummary[];
   serviceSlug: string;
+  eyebrowStyle?: EyebrowStyle;
+  eyebrowWeight?: EyebrowWeight;
+  headingDecoration?: HeadingDecoration;
 }) {
   return (
     <Reveal className="mt-16">
-      <SectionHeading label="Portfolio" title="Recent work" />
+      <SectionHeading
+        label="Portfolio"
+        title="Recent work"
+        eyebrowStyle={eyebrowStyle}
+        eyebrowWeight={eyebrowWeight}
+        headingDecoration={headingDecoration}
+      />
       {posts.length === 0 ? (
         <div className="mt-8 rounded-sm border border-panel-border bg-panel p-8">
           <p className="text-sm text-muted">

@@ -4,6 +4,8 @@ import BlockRenderer from "@/components/BlockRenderer";
 import { getPages } from "@/lib/pages";
 import { getPageBlocks } from "@/lib/pageBlocks";
 import { getPublishedServices } from "@/lib/services";
+import { getSiteSettings } from "@/lib/settings";
+import { DEFAULT_DECORATIONS } from "@/lib/decorations";
 import { pageMetadata, titleFor } from "@/lib/metadata";
 
 // The 4 pages seeded by migration 0008 already have their own dedicated
@@ -47,7 +49,17 @@ export default async function CustomPage({
   const page = pages.find((p) => p.slug === slug);
   if (!page) notFound();
 
-  const [blocks, services] = await Promise.all([getPageBlocks(slug), getPublishedServices()]);
+  const [blocks, services, settings] = await Promise.all([
+    getPageBlocks(slug),
+    getPublishedServices(),
+    getSiteSettings(),
+  ]);
 
-  return <BlockRenderer blocks={blocks} services={services} />;
+  return (
+    <BlockRenderer
+      blocks={blocks}
+      services={services}
+      decorations={settings.theme.decorations ?? DEFAULT_DECORATIONS}
+    />
+  );
 }

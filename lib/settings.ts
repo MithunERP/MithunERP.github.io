@@ -60,6 +60,18 @@ export interface TransitionSettings {
   schedule: TransitionSchedule; // used when mode = "scheduled"
 }
 
+export type HeadingDecoration = "plain" | "underline" | "left-bar" | "boxed";
+export type QuoteDecoration = "left-bar" | "quote-marks" | "centered" | "boxed";
+export type EyebrowStyle = "plain" | "bar" | "underline" | "pill";
+export type EyebrowWeight = "bold" | "normal";
+
+export interface DecorationSettings {
+  heading: HeadingDecoration;
+  quote: QuoteDecoration;
+  eyebrow_style: EyebrowStyle;
+  eyebrow_weight: EyebrowWeight;
+}
+
 export interface ThemeSettings {
   colors: {
     dark: ThemeColorTokens;
@@ -68,6 +80,7 @@ export interface ThemeSettings {
   font_display: string;
   font_body: string;
   transitions: TransitionSettings;
+  decorations: DecorationSettings;
 }
 
 // Hero/about/contact content moved out of this site-wide singleton into

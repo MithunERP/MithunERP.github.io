@@ -87,7 +87,10 @@
 
 .post-content h1,
 .post-content h2,
-.post-content h3 {
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
   font-family: var(--font-cinzel), serif;
   color: var(--foreground);
   line-height: 1.3;
@@ -103,6 +106,20 @@
 
 .post-content h3 {
   font-size: 1.125rem;
+}
+
+.post-content h4 {
+  font-size: 1rem;
+}
+
+.post-content h5 {
+  font-size: 0.9375rem;
+}
+
+.post-content h6 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .post-content a {
@@ -121,8 +138,6 @@
 }
 
 .post-content blockquote {
-  border-left: 2px solid var(--accent);
-  padding-left: 1em;
   color: var(--muted);
 }
 
@@ -440,4 +455,114 @@ html.has-custom-cursor button {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
   }
+}
+
+/* ============================================================
+   Content decoration presets — heading (h1-h6)/quote/eyebrow, CMS-
+   selectable from /admin/theme (site-wide default) or per-block (each
+   page block's own Layout section). Class names are built by
+   lib/decorations.ts, applied in BlockRenderer.tsx/SectionHeading.tsx
+   (block-rendered content) and PostDetailView.tsx (markdown post
+   content). Each preset below targets two forms with one rule body:
+   the class applied directly to a single element (block-rendered
+   headings/quotes), and the same class applied to an ancestor with a
+   descendant selector (markdown post content, which has no per-element
+   React control — only .post-content as a whole gets a class).
+   ============================================================ */
+
+/* ---- heading decoration ---- */
+
+.heading-deco-underline,
+.heading-deco-underline :is(h1, h2, h3, h4, h5, h6) {
+  position: relative;
+  padding-bottom: 0.35em;
+}
+
+.heading-deco-underline::after,
+.heading-deco-underline :is(h1, h2, h3, h4, h5, h6)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 3rem;
+  height: 2px;
+  background: var(--accent);
+}
+
+.heading-deco-left-bar,
+.heading-deco-left-bar :is(h1, h2, h3, h4, h5, h6) {
+  border-left: 3px solid var(--accent);
+  padding-left: 0.6em;
+}
+
+.heading-deco-boxed,
+.heading-deco-boxed :is(h1, h2, h3, h4, h5, h6) {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  padding: 0.3em 0.6em;
+}
+
+/* ---- quote decoration ---- */
+
+.quote-deco-left-bar,
+.quote-deco-left-bar blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1.5rem;
+}
+
+.quote-deco-quote-marks,
+.quote-deco-quote-marks blockquote {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.quote-deco-quote-marks::before,
+.quote-deco-quote-marks blockquote::before {
+  content: "\201C";
+  position: absolute;
+  left: 0;
+  top: -0.15em;
+  font-family: var(--font-cinzel), serif;
+  font-size: 2.5em;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+.quote-deco-centered,
+.quote-deco-centered blockquote {
+  text-align: center;
+  font-style: italic;
+}
+
+.quote-deco-boxed,
+.quote-deco-boxed blockquote {
+  padding: 1.25em 1.5em;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+}
+
+/* ---- eyebrow style — "plain" (today's default) needs no extra rule,
+   the base uppercase/tracking/color/weight classes already cover it ---- */
+
+.eyebrow-bar {
+  display: inline-block;
+  border-left: 3px solid var(--accent);
+  padding-left: 0.6em;
+}
+
+.eyebrow-underline {
+  display: inline-block;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.3em;
+}
+
+.eyebrow-pill {
+  display: inline-block;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 0.25em 0.9em;
 }

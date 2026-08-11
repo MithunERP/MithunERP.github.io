@@ -7,6 +7,8 @@ import Divider from "@/components/Divider";
 import ContactForm from "@/components/ContactForm";
 import type { BlockLayout, PageBlock } from "@/lib/pageBlocks";
 import type { Service } from "@/lib/services";
+import type { DecorationSettings } from "@/lib/settings";
+import { eyebrowClassName, headingDecorationClassName, quoteDecorationClassName } from "@/lib/decorations";
 
 const SPACER_HEIGHT: Record<string, string> = { sm: "h-8", md: "h-16", lg: "h-28" };
 
@@ -84,9 +86,11 @@ const H1_CAPABLE_TYPES = new Set(["hero", "heading", "about_bio"]);
 export default function BlockRenderer({
   blocks,
   services,
+  decorations,
 }: {
   blocks: PageBlock[];
   services: Service[];
+  decorations: DecorationSettings;
 }) {
   const firstH1BlockId = blocks.find((b) => H1_CAPABLE_TYPES.has(b.block_type))?.id;
 
@@ -95,6 +99,11 @@ export default function BlockRenderer({
       {blocks.map((block) => {
         const p = block.props;
         const layout = block.layout ?? {};
+        // Per-block overrides (layout.*) win over the site-wide default.
+        const headingDecoration = layout.heading_decoration ?? decorations.heading;
+        const eyebrowStyle = layout.eyebrow_style ?? decorations.eyebrow_style;
+        const eyebrowWeight = layout.eyebrow_weight ?? decorations.eyebrow_weight;
+        const quoteDecoration = layout.quote_decoration ?? decorations.quote;
 
         switch (block.block_type) {
           case "hero": {
@@ -115,10 +124,12 @@ export default function BlockRenderer({
               >
                 <div className="grid gap-12 md:grid-cols-2 md:items-center">
                   <Reveal>
-                    <p className="mb-4 text-xs uppercase tracking-[0.3em] font-bold text-accent">
+                    <p className={`mb-4 text-xs uppercase tracking-[0.3em] text-accent ${eyebrowClassName(eyebrowStyle, eyebrowWeight)}`}>
                       {(p.eyebrow as string) ?? ""}
                     </p>
-                    <HeroHeading className="max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl">
+                    <HeroHeading
+                      className={`max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl ${headingDecorationClassName(headingDecoration)}`}
+                    >
                       {(p.title_main as string) ?? ""} <span className="text-accent">{(p.title_accent as string) ?? ""}</span>
                     </HeroHeading>
                     <p className="mt-6 max-w-xl text-lg text-muted">{(p.description as string) ?? ""}</p>
@@ -161,7 +172,14 @@ export default function BlockRenderer({
             return (
               <LayoutWrap key={block.id} layout={layout}>
                 <Reveal>
-                  <SectionHeading as={block.id === firstH1BlockId ? "h1" : "h2"} label={label} title={title} />
+                  <SectionHeading
+                    as={block.id === firstH1BlockId ? "h1" : "h2"}
+                    label={label}
+                    title={title}
+                    eyebrowStyle={eyebrowStyle}
+                    eyebrowWeight={eyebrowWeight}
+                    headingDecoration={headingDecoration}
+                  />
                   {description && <p className="mt-6 max-w-2xl text-muted">{description}</p>}
                 </Reveal>
               </LayoutWrap>
@@ -175,7 +193,14 @@ export default function BlockRenderer({
             return (
               <LayoutWrap key={block.id} layout={layout}>
                 <Reveal>
-                  <SectionHeading as={block.id === firstH1BlockId ? "h1" : "h2"} label={label} title={title} />
+                  <SectionHeading
+                    as={block.id === firstH1BlockId ? "h1" : "h2"}
+                    label={label}
+                    title={title}
+                    eyebrowStyle={eyebrowStyle}
+                    eyebrowWeight={eyebrowWeight}
+                    headingDecoration={headingDecoration}
+                  />
                   {bioParagraphs.map((paragraph, i) => (
                     <p key={i} className={`${i === 0 ? "mt-8" : "mt-4"} text-muted leading-relaxed`}>
                       {paragraph}
@@ -194,7 +219,13 @@ export default function BlockRenderer({
               <LayoutWrap key={block.id} layout={layout}>
                 {label && title && (
                   <Reveal className="mb-10">
-                    <SectionHeading label={label} title={title} />
+                    <SectionHeading
+                      label={label}
+                      title={title}
+                      eyebrowStyle={eyebrowStyle}
+                      eyebrowWeight={eyebrowWeight}
+                      headingDecoration={headingDecoration}
+                    />
                   </Reveal>
                 )}
                 <Reveal className="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -247,7 +278,13 @@ export default function BlockRenderer({
               <LayoutWrap key={block.id} layout={layout} defaultWidth="wide">
                 {label && title && (
                   <Reveal>
-                    <SectionHeading label={label} title={title} />
+                    <SectionHeading
+                      label={label}
+                      title={title}
+                      eyebrowStyle={eyebrowStyle}
+                      eyebrowWeight={eyebrowWeight}
+                      headingDecoration={headingDecoration}
+                    />
                   </Reveal>
                 )}
                 <div className="mt-10 grid gap-px overflow-hidden rounded-sm bg-panel-border sm:grid-cols-2 md:grid-cols-3">
@@ -344,7 +381,7 @@ export default function BlockRenderer({
             const attribution = p.attribution as string | undefined;
             return (
               <LayoutWrap key={block.id} layout={layout}>
-                <Reveal className="border-l-2 border-accent pl-6">
+                <Reveal className={quoteDecorationClassName(quoteDecoration)}>
                   <p className="font-display text-xl italic text-foreground">&ldquo;{text}&rdquo;</p>
                   {attribution && <p className="mt-3 text-sm text-muted">— {attribution}</p>}
                 </Reveal>

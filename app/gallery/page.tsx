@@ -1,4 +1,6 @@
 import { getGalleryImages } from "@/lib/gallery";
+import { getSiteSettings } from "@/lib/settings";
+import { DEFAULT_DECORATIONS, eyebrowClassName, headingDecorationClassName } from "@/lib/decorations";
 import Reveal from "@/components/Reveal";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -11,12 +13,15 @@ const SIZE_CLASSES = ["col-span-1 row-span-1", "col-span-1 row-span-2", "col-spa
 const SHAPE_CLASSES = ["rounded-sm", "rounded-2xl", "rounded-tl-3xl rounded-br-3xl"];
 
 export default async function GalleryPage() {
-  const images = await getGalleryImages();
+  const [images, settings] = await Promise.all([getGalleryImages(), getSiteSettings()]);
+  const { eyebrow_style, eyebrow_weight, heading } = settings.theme.decorations ?? DEFAULT_DECORATIONS;
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-20">
-      <p className="text-xs uppercase tracking-[0.3em] font-bold text-accent">Gallery</p>
-      <h1 className="mt-4 font-display text-3xl text-foreground md:text-5xl">
+      <p className={`text-xs uppercase tracking-[0.3em] text-accent ${eyebrowClassName(eyebrow_style, eyebrow_weight)}`}>
+        Gallery
+      </p>
+      <h1 className={`mt-4 font-display text-3xl text-foreground md:text-5xl ${headingDecorationClassName(heading)}`}>
         Photography, in full.
       </h1>
 
