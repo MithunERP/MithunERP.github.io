@@ -32,10 +32,10 @@ export default function Navbar({ links }: { links: NavLink[] }) {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
+      className={`sticky top-0 z-50 relative transition-all duration-300 ${
         scrolled
-          ? "border-panel-border/60 bg-background/60 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-xl backdrop-saturate-150"
-          : "border-transparent bg-transparent"
+          ? "bg-background/60 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_10px_20px_-14px_var(--accent-glow)] backdrop-blur-xl backdrop-saturate-150"
+          : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -87,6 +87,15 @@ export default function Navbar({ links }: { links: NavLink[] }) {
             </Link>
           ))}
         </nav>
+      )}
+
+      {scrolled && (
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center">
+          <div className="relative h-px w-40 md:w-56">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-70 blur-sm" />
+          </div>
+        </div>
       )}
     </header>
   );
