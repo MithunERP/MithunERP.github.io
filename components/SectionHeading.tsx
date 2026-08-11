@@ -27,7 +27,8 @@ interface SectionHeadingProps {
 // default to today's exact look (plain/bold/plain) — callers pass an
 // explicit value when they've resolved a CMS override (see
 // BlockRenderer.tsx), everyone else gets the site default implicitly since
-// "plain"/"bold" IS the seeded site default (see docs/adr's decoration ADR).
+// "plain"/"bold" IS the seeded site default (see mithunerp-source's
+// docs/adr/0013-content-decoration-presets.md).
 export default function SectionHeading({
   label,
   title,
