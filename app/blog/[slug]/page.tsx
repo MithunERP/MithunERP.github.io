@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPublishedPosts } from "@/lib/posts";
-import { postMetadata } from "@/lib/metadata";
+import { postMetadata, titleFor } from "@/lib/metadata";
 import PostDetailView from "@/components/PostDetailView";
 
 // Only blog-type posts get a static page here — portfolio posts live at
@@ -27,7 +27,7 @@ export async function generateMetadata({
   try {
     return postMetadata(await getPostBySlug(slug));
   } catch {
-    return { title: "Post not found — MithunERP" };
+    return { title: titleFor("Post not found") };
   }
 }
 

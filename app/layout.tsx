@@ -8,11 +8,12 @@ import Preloader from "@/components/Preloader";
 import { TransitionsProvider } from "@/components/TransitionsProvider";
 import ThemeScript from "./theme-script";
 import { getSiteSettings, type ThemeSettings } from "@/lib/settings";
+import { titleFor } from "@/lib/metadata";
 import "./globals.css";
 
 const SITE_URL = "https://mithunerp.github.io";
 const SITE_NAME = "MithunERP";
-const DEFAULT_TITLE = "MithunERP — Web Design, Software & Photography";
+const DEFAULT_TITLE = titleFor("Home");
 const DEFAULT_DESCRIPTION =
   "MithunERP crafts custom web design, bespoke software, and professional photography for businesses that want to stand out.";
 // Square brand mark — not a purpose-made 1200x630 social-preview image, but
@@ -23,8 +24,9 @@ const DEFAULT_OG_IMAGE = "/brand/logo-official.png";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   // Plain string, not a title.template object — every page in this repo
-  // already sets its own full "X — MithunERP" title string, so a template
-  // here would double the suffix on every one of them.
+  // already sets its own full "MithunERP-X" title string (via
+  // lib/metadata.ts's titleFor()/pageMetadata()/postMetadata()), so a
+  // template here would double the prefix on every one of them.
   title: DEFAULT_TITLE,
   description: DEFAULT_DESCRIPTION,
   openGraph: {

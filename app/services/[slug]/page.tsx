@@ -10,7 +10,7 @@ import SectionHeading from "@/components/SectionHeading";
 import CtaButton from "@/components/CtaButton";
 import ServicePortfolio from "@/components/ServicePortfolio";
 import PhotoCollage from "@/components/PhotoCollage";
-import { pageMetadata } from "@/lib/metadata";
+import { pageMetadata, titleFor } from "@/lib/metadata";
 
 // One page per published service, generic — any service created from
 // /admin/services gets a working detail page automatically, not just the
@@ -33,8 +33,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const service = await getServiceBySlug(slug);
-  if (!service) return { title: "Service not found — MithunERP" };
-  return pageMetadata(`${service.name} — MithunERP`, service.summary);
+  if (!service) return { title: titleFor("Service not found") };
+  return pageMetadata(service.name, service.summary);
 }
 
 const CTA_LABELS: Record<string, string> = {

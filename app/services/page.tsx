@@ -4,7 +4,7 @@ import { getPageBlocks } from "@/lib/pageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata(
-  "Services — MithunERP",
+  "Services",
   "Web design, custom software and ERP, and professional photography services.",
 );
 

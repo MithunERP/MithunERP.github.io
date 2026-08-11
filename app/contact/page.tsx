@@ -4,7 +4,7 @@ import { getPageBlocks } from "@/lib/pageBlocks";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata(
-  "Contact — MithunERP",
+  "Contact",
   "Get in touch with MithunERP about web design, software, or photography.",
 );
 

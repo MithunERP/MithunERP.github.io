@@ -4,7 +4,7 @@ import PortfolioBrowser from "@/components/PortfolioBrowser";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata(
-  "Portfolio — MithunERP",
+  "Portfolio",
   "Selected work across web design, custom software, and photography.",
 );
 

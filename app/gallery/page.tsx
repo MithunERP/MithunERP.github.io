@@ -3,7 +3,7 @@ import Reveal from "@/components/Reveal";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata(
-  "Gallery — MithunERP",
+  "Gallery",
   "The full MithunERP photography gallery.",
 );
 
