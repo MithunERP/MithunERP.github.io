@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import QuickConnect from "@/components/QuickConnect";
 import ChatWidget from "@/components/ChatWidget";
 import Cursor from "@/components/Cursor";
+import ScrollRail from "@/components/ScrollRail";
 import Preloader from "@/components/Preloader";
 import { TransitionsProvider } from "@/components/TransitionsProvider";
 import ThemeScript from "./theme-script";
@@ -119,6 +120,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <Preloader />
         <Cursor />
+        <ScrollRail />
         <Navbar links={header.nav_links} />
         <main id="main-content" className="flex-1">
           <TransitionsProvider config={theme.transitions}>{children}</TransitionsProvider>

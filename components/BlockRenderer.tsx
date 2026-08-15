@@ -8,7 +8,7 @@ import ContactForm from "@/components/ContactForm";
 import type { BlockLayout, PageBlock } from "@/lib/pageBlocks";
 import type { Service } from "@/lib/services";
 import type { DecorationSettings } from "@/lib/settings";
-import { eyebrowClassName, headingDecorationClassName, quoteDecorationClassName } from "@/lib/decorations";
+import { headingDecorationClassName, quoteDecorationClassName } from "@/lib/decorations";
 
 const SPACER_HEIGHT: Record<string, string> = { sm: "h-8", md: "h-16", lg: "h-28" };
 
@@ -108,59 +108,57 @@ export default function BlockRenderer({
         switch (block.block_type) {
           case "hero": {
             const HeroHeading = block.id === firstH1BlockId ? "h1" : "h2";
+            // Editorial redesign (2026-08-15): no eyebrow, no split visual
+            // panel — a single huge two-line statement carries the hero,
+            // set in the body face (not font-display) at heavy weight, the
+            // accent word in --accent-glow rather than --accent for a
+            // sharper pop against the background. The index bar below
+            // reuses the `services` prop BlockRenderer already receives —
+            // it's a real anchor nav, not decorative numbering.
+            const indexItems = [
+              ...services.map((service) => ({ label: service.name, href: `/services/${service.slug}` })),
+              { label: "Portfolio", href: "/portfolio" },
+              { label: "Contact", href: "/contact" },
+            ];
             return (
-              <LayoutWrap
-                key={block.id}
-                layout={layout}
-                defaultWidth="wide"
-                defaultSpacingTop="lg"
-                defaultSpacingBottom="lg"
-                decorate={
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--accent-strong)_0%,_transparent_55%)] opacity-30"
-                  />
-                }
-              >
-                <div className="grid gap-12 md:grid-cols-2 md:items-center">
-                  <Reveal>
-                    <p className={`mb-4 text-xs uppercase tracking-[0.3em] text-accent ${eyebrowClassName(eyebrowStyle, eyebrowWeight)}`}>
-                      {(p.eyebrow as string) ?? ""}
-                    </p>
-                    <HeroHeading
-                      className={`max-w-3xl font-display text-4xl font-bold leading-tight text-foreground md:text-6xl ${headingDecorationClassName(headingDecoration)}`}
+              <LayoutWrap key={block.id} layout={layout} defaultWidth="wide" defaultSpacingTop="lg" defaultSpacingBottom="none">
+                <Reveal>
+                  <HeroHeading
+                    className={`max-w-4xl font-sans text-5xl font-extrabold leading-[0.98] tracking-tight text-foreground md:text-7xl ${headingDecorationClassName(headingDecoration)}`}
+                  >
+                    {(p.title_main as string) ?? ""}
+                    <br />
+                    <span className="text-accent-glow">{(p.title_accent as string) ?? ""}</span>
+                  </HeroHeading>
+                  <p className="mt-10 max-w-lg text-lg leading-relaxed text-muted">{(p.description as string) ?? ""}</p>
+                  <div className="mt-8 flex flex-wrap gap-8">
+                    <Link
+                      href={(p.cta_primary_href as string) || "/services"}
+                      className="border-b border-accent pb-0.5 text-sm text-foreground transition-colors hover:border-accent-glow hover:text-accent-glow"
                     >
-                      {(p.title_main as string) ?? ""} <span className="text-accent">{(p.title_accent as string) ?? ""}</span>
-                    </HeroHeading>
-                    <p className="mt-6 max-w-xl text-lg text-muted">{(p.description as string) ?? ""}</p>
-                    <div className="mt-10 flex gap-4">
-                      <CtaButton href={(p.cta_primary_href as string) || "/services"}>
-                        {(p.cta_primary_label as string) ?? ""}
-                      </CtaButton>
-                      <CtaButton href={(p.cta_secondary_href as string) || "/contact"} variant="secondary">
-                        {(p.cta_secondary_label as string) ?? ""}
-                      </CtaButton>
-                    </div>
-                  </Reveal>
-                  <Reveal delay={2} className="hidden md:block">
-                    <div className="relative aspect-square overflow-hidden rounded-sm border border-panel-border bg-panel">
-                      <div
-                        aria-hidden
-                        className="absolute inset-0 bg-[linear-gradient(160deg,_var(--panel)_0%,_var(--accent-strong)_150%)] opacity-70"
-                      />
-                      <div
-                        aria-hidden
-                        className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:28px_28px]"
-                      />
-                      <div
-                        aria-hidden
-                        className="pointer-events-none absolute -bottom-16 -right-6 select-none font-display text-[260px] font-black leading-none text-accent/[0.09]"
-                      >
-                        M
-                      </div>
-                    </div>
-                  </Reveal>
-                </div>
+                      {(p.cta_primary_label as string) ?? ""}
+                    </Link>
+                    <Link
+                      href={(p.cta_secondary_href as string) || "/contact"}
+                      className="border-b border-panel-border pb-0.5 text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+                    >
+                      {(p.cta_secondary_label as string) ?? ""}
+                    </Link>
+                  </div>
+                </Reveal>
+
+                <nav aria-label="Section index" className="mt-16 flex flex-wrap border-y border-panel-border">
+                  {indexItems.map((item, i) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-baseline gap-2.5 border-r border-panel-border px-5 py-4 text-xs uppercase tracking-wider text-muted transition-colors last:border-r-0 hover:text-foreground"
+                    >
+                      <span className="font-display text-[0.7rem] text-accent">{String(i + 1).padStart(2, "0")}</span>
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
               </LayoutWrap>
             );
           }
@@ -242,8 +240,6 @@ export default function BlockRenderer({
 
           case "services_grid": {
             const variant = (p.variant as string) || "pillars";
-            const label = (p.label as string) || "";
-            const title = (p.title as string) || "";
             if (variant === "cards") {
               return (
                 <LayoutWrap key={block.id} layout={layout} defaultWidth="wide">
@@ -274,26 +270,35 @@ export default function BlockRenderer({
                 </LayoutWrap>
               );
             }
+            // Editorial redesign (2026-08-15): a stacked list, not a card
+            // grid — no section-intro label (the hero's index bar already
+            // named these). Each row reveals a left accent rule + arrow on
+            // hover instead of a background-color swap.
             return (
               <LayoutWrap key={block.id} layout={layout} defaultWidth="wide">
-                {label && title && (
-                  <Reveal>
-                    <SectionHeading
-                      label={label}
-                      title={title}
-                      eyebrowStyle={eyebrowStyle}
-                      eyebrowWeight={eyebrowWeight}
-                      headingDecoration={headingDecoration}
-                    />
-                  </Reveal>
-                )}
-                <div className="mt-10 grid gap-px overflow-hidden rounded-sm bg-panel-border sm:grid-cols-2 md:grid-cols-3">
-                  {services.map((service, i) => (
-                    <Reveal key={service.slug} delay={((i % 3) + 1) as 1 | 2 | 3}>
-                      <div className="h-full bg-panel p-8 transition-colors hover:bg-background">
-                        <h3 className="font-display text-xl text-foreground">{service.name}</h3>
-                        <p className="mt-3 text-sm leading-relaxed text-muted">{service.short_description}</p>
-                      </div>
+                <div>
+                  {services.map((service) => (
+                    <Reveal key={service.slug}>
+                      <Link
+                        href={`/services/${service.slug}`}
+                        className="group relative grid grid-cols-1 gap-3 border-t border-panel-border py-10 transition-[padding] duration-300 last:border-b hover:pl-5 md:grid-cols-[1fr_auto_auto] md:items-baseline md:gap-6"
+                      >
+                        <span
+                          aria-hidden
+                          className="absolute -left-5 top-0 bottom-0 w-0.5 origin-top scale-y-0 bg-accent transition-transform duration-300 group-hover:scale-y-100"
+                        />
+                        <span>
+                          <h3 className="font-display text-3xl font-bold text-foreground md:text-4xl">{service.name}</h3>
+                          <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">{service.short_description}</p>
+                        </span>
+                        <span className="self-start text-xs uppercase tracking-wider text-muted">{service.tagline}</span>
+                        <span
+                          aria-hidden
+                          className="self-start font-display text-xl text-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                        >
+                          →
+                        </span>
+                      </Link>
                     </Reveal>
                   ))}
                 </div>
