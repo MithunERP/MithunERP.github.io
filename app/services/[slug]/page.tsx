@@ -16,9 +16,10 @@ import { pageMetadata, titleFor } from "@/lib/metadata";
 
 // One page per published service, generic — any service created from
 // /admin/services gets a working detail page automatically, not just the
-// three that used to have their own hardcoded route file. `software` and
-// `photography` keep their bespoke extra sections (GitHub projects, photo
-// gallery) via the slug checks below; a new service gets the plain layout.
+// three that used to have their own hardcoded route file. Bespoke extra
+// sections (GitHub projects, photo gallery) are driven by each service's
+// own `extra_sections` field (set from /admin/services), not by slug — a
+// service with an empty `extra_sections` gets the plain layout.
 export async function generateStaticParams() {
   const services = await getPublishedServices();
   // See app/blog/[slug]/page.tsx's comment — output: "export" requires at
@@ -56,7 +57,7 @@ export default async function ServiceDetailPage({
 
   const [portfolio, gallery, settings] = await Promise.all([
     getPublishedPosts({ type: "portfolio", service: slug, limit: 5 }),
-    slug === "photography" ? getGalleryImages() : Promise.resolve([]),
+    service.extra_sections.includes("photo_gallery") ? getGalleryImages() : Promise.resolve([]),
     getSiteSettings(),
   ]);
   const { eyebrow_style, eyebrow_weight, heading } = settings.theme.decorations ?? DEFAULT_DECORATIONS;
@@ -89,7 +90,7 @@ export default async function ServiceDetailPage({
         ))}
       </div>
 
-      {slug === "photography" &&
+      {service.extra_sections.includes("photo_gallery") &&
         (gallery.length > 0 ? (
           <PhotoCollage images={gallery} />
         ) : (
@@ -111,7 +112,7 @@ export default async function ServiceDetailPage({
         headingDecoration={heading}
       />
 
-      {slug === "software" && (
+      {service.extra_sections.includes("github_projects") && (
         <Reveal className="mt-16">
           <h2 className="font-display text-xl text-foreground">Completed Projects</h2>
           <p className="mt-2 text-sm text-muted">Live from GitHub — updated automatically.</p>

@@ -9,6 +9,7 @@ export interface Service {
   short_description: string;
   items: string[];
   sort_order: number;
+  extra_sections: string[];
 }
 
 // CMS-backed — see mithunerp-source's docs/adr/0006-cms-content-model-and-
